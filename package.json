@@ -1,0 +1,16 @@
+{
+  "name": "ken-olympics",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Ken Olympics — a live, mobile-first bachelor-party scoreboard (static site + Firebase live sync).",
+  "scripts": {
+    "serve": "node tools/serve.cjs",
+    "test:unit": "node --test \"tests/unit/**/*.test.js\"",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "pw:install": "playwright install chromium webkit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

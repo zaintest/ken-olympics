@@ -1,0 +1,10 @@
+node_modules/
+test-results/
+playwright-report/
+playwright/.cache/
+screenshots/
+.claude/settings.local.json
+.__inline.js
+
+# Private — your editor secret + link. Never commit this.
+MY-EDITOR-LINK.txt

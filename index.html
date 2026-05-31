@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ken Olympics — San Diego '26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,13 +12,16 @@
     --bg:#15101f;--panel:#221a30;--panel-2:#2b2139;
     --line:rgba(255,194,75,.20);--line-soft:rgba(255,255,255,.08);
     --gold:#ffc24b;--coral:#ff6f59;--pink:#ff5d8f;--ocean:#36b3e0;--live:#ff315b;
-    --ink:#fff3e9;--muted:#b3a3bd;
+    --ink:#fff3e9;--muted:#b9aac2;
     --t1:#ff6f59;--t2:#2fa8d0;--t3:#3fc26e;--t4:#ffb13b;
-    --disp:'Lilita One',cursive;--mono:'Space Mono',monospace;--body:'Outfit',sans-serif;
+    --disp:'Lilita One','Arial Black','Trebuchet MS',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,'Courier New',monospace;
+    --body:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
     --sunset:linear-gradient(100deg,#ff5d8f,#ff6f59 46%,#ffc24b);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--body);}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow-x:hidden;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
   body{min-height:100vh;
     background-image:
       radial-gradient(130% 80% at 50% -18%, rgba(255,141,92,.20), transparent 55%),
@@ -26,10 +29,10 @@
       linear-gradient(180deg,#1c1432 0%, #15101f 42%, #110c19 100%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     background-attachment:fixed;padding-bottom:92px;}
-  .wrap{max-width:560px;margin:0 auto;padding:0 16px;}
+  .wrap{max-width:560px;margin:0 auto;padding:0 calc(16px + env(safe-area-inset-right)) 0 calc(16px + env(safe-area-inset-left));}
 
   header{position:sticky;top:0;z-index:40;background:linear-gradient(180deg, rgba(21,16,31,.97), rgba(21,16,31,.78));backdrop-filter:blur(12px);border-bottom:1px solid var(--line);overflow:hidden;}
-  .head-in{max-width:560px;margin:0 auto;padding:15px 16px 11px;position:relative;}
+  .head-in{max-width:560px;margin:0 auto;padding:calc(15px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 11px calc(16px + env(safe-area-inset-left));position:relative;}
   .sun{position:absolute;right:-20px;top:-26px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 50% 60%, rgba(255,194,75,.55), rgba(255,111,89,.22) 45%, transparent 70%);pointer-events:none;}
   .palm{position:absolute;bottom:-2px;opacity:.16;pointer-events:none;}
   .title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;position:relative;}
@@ -62,7 +65,7 @@
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,49,91,.55);}70%{box-shadow:0 0 0 9px rgba(255,49,91,0);}100%{box-shadow:0 0 0 0 rgba(255,49,91,0);}}
   .hero{background:radial-gradient(130% 110% at 0% 0%, rgba(255,111,89,.18), transparent 52%), var(--panel);border:1px solid var(--line);}
   .hero .enum{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;}
-  .hero h2{font-family:var(--disp);font-size:38px;line-height:.92;margin:9px 0 7px;letter-spacing:.005em;}
+  .hero h2{font-family:var(--disp);font-size:38px;line-height:.92;margin:9px 0 7px;letter-spacing:.005em;overflow-wrap:anywhere;}
   .hero .meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px;}
   .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ink);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:99px;padding:5px 11px;text-transform:uppercase;}
   .chip.acc{color:#2a1006;background:var(--gold);border-color:var(--gold);}
@@ -73,7 +76,7 @@
   .roster-mini{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px;}
   .rm{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;padding:8px 10px;}
   .swatch{width:9px;height:24px;border-radius:3px;flex-shrink:0;}
-  .rm .nm{font-size:12.5px;font-weight:600;line-height:1.15;}
+  .rm .nm{font-size:12.5px;font-weight:600;line-height:1.15;overflow-wrap:anywhere;}
   .rm .who{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.02em;line-height:1.3;}
   .rm .who.unset{color:var(--coral);opacity:.8;}
 
@@ -117,7 +120,7 @@
   .rank.r1{border-color:var(--line);background:radial-gradient(150% 130% at 0 0,rgba(255,194,75,.13),transparent 55%),var(--panel);}
   .medal{font-size:25px;min-width:32px;text-align:center;}
   .rank .info{flex:1;min-width:0;}
-  .rank .tn{font-family:var(--disp);font-size:22px;letter-spacing:.005em;line-height:1;}
+  .rank .tn{font-family:var(--disp);font-size:22px;letter-spacing:.005em;line-height:1;overflow-wrap:anywhere;}
   .rank .det{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:5px;}
   .rank .pts{font-family:var(--disp);font-size:36px;line-height:.82;color:var(--gold);text-align:right;}
   .rank .pts small{display:block;font-family:var(--mono);font-size:8.5px;color:var(--muted);letter-spacing:.16em;font-weight:700;margin-top:4px;}
@@ -136,21 +139,22 @@
   @keyframes spin{to{transform:translateX(-50%) rotate(360deg);}}
   .champ .crown{font-size:48px;position:relative;filter:drop-shadow(0 4px 14px rgba(255,194,75,.45));}
   .champ .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--coral);text-transform:uppercase;margin:12px 0 7px;position:relative;}
-  .champ .cn{font-family:var(--disp);font-size:44px;line-height:.95;letter-spacing:.005em;position:relative;}
+  .champ .cn{font-family:var(--disp);font-size:44px;line-height:.95;letter-spacing:.005em;position:relative;overflow-wrap:anywhere;}
   .champ .cp{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em;margin-top:11px;position:relative;}
 
   .team-edit{background:var(--panel);border:1px solid var(--line-soft);border-radius:18px;padding:14px;margin-bottom:12px;border-left:6px solid var(--tc,var(--muted));}
-  .te-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-  .te-head input.tname{flex:1;background:transparent;border:none;border-bottom:1px solid var(--line-soft);color:var(--ink);font-family:var(--disp);font-size:21px;letter-spacing:.005em;padding:4px 2px;outline:none;}
+  .te-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .te-head input.tname{flex:1;min-width:0;background:transparent;border:none;border-bottom:1px solid var(--line-soft);color:var(--ink);font-family:var(--disp);font-size:21px;letter-spacing:.005em;padding:4px 2px;outline:none;}
   .te-head input.tname:focus{border-color:var(--gold);}
-  .colors{display:flex;gap:6px;}
-  .colors button{width:22px;height:22px;border-radius:7px;border:2px solid transparent;cursor:pointer;padding:0;}
-  .colors button.sel{border-color:var(--ink);transform:scale(1.12);}
+  .colors-label{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;flex-basis:100%;margin-top:2px;}
+  .colors{display:flex;gap:8px;flex-wrap:wrap;flex-basis:100%;}
+  .colors button{width:40px;height:40px;border-radius:11px;border:2px solid transparent;cursor:pointer;padding:0;}
+  .colors button.sel{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.22);}
   .player-in{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
   .pbadge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:#2a1006;background:var(--gold);border-radius:7px;padding:6px 8px;min-width:32px;text-align:center;}
-  .player-in input{flex:1;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;color:var(--ink);font-family:var(--body);font-size:14.5px;padding:11px 12px;outline:none;}
+  .player-in input{flex:1;min-width:0;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;color:var(--ink);font-family:var(--body);font-size:16px;padding:11px 12px;outline:none;}
   .player-in input:focus{border-color:var(--gold);}
-  .cap-toggle{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.04em;border:1px solid var(--line-soft);background:transparent;color:var(--muted);border-radius:7px;padding:7px 8px;cursor:pointer;text-transform:uppercase;}
+  .cap-toggle{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.04em;border:1px solid var(--line-soft);background:transparent;color:var(--muted);border-radius:9px;min-width:44px;min-height:44px;padding:0 10px;cursor:pointer;text-transform:uppercase;flex-shrink:0;}
   .cap-toggle.on{color:#2a1006;background:var(--gold);border-color:var(--gold);}
 
   details.ref{background:var(--panel);border:1px solid var(--line-soft);border-radius:16px;margin-bottom:12px;overflow:hidden;}
@@ -164,13 +168,13 @@
   .util-row{display:flex;gap:8px;margin-top:4px;}
 
   nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:linear-gradient(180deg,rgba(21,16,31,.82),rgba(21,16,31,.99));backdrop-filter:blur(14px);border-top:1px solid var(--line);}
-  .nav-in{max-width:560px;margin:0 auto;display:grid;padding:9px 8px calc(9px + env(safe-area-inset-bottom));}
+  .nav-in{max-width:560px;margin:0 auto;display:grid;padding:9px calc(8px + env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) calc(8px + env(safe-area-inset-left));}
   .nav-in.cols-4{grid-template-columns:repeat(4,1fr);}
   .nav-in.cols-3{grid-template-columns:repeat(3,1fr);}
   .nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;color:var(--muted);transition:color .15s;}
   .nav-btn.active{color:var(--gold);}
   .nav-btn svg{width:21px;height:21px;}
-  .nav-btn span{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+  .nav-btn span{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
   .nav-btn .ind{height:2px;width:18px;border-radius:99px;background:transparent;margin-top:1px;}
   .nav-btn.active .ind{background:var(--gold);}
   .nav-btn.hide{display:none;}
@@ -186,21 +190,21 @@
 
   .sec-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--coral);text-transform:uppercase;margin:4px 0 10px;display:flex;align-items:center;gap:8px;}
   .lineup-team{margin-bottom:12px;}
-  .lineup-team .lt-name{display:flex;align-items:center;gap:8px;font-family:var(--body);font-weight:700;font-size:13px;margin-bottom:6px;}
-  .lineup-team .lt-name .sw{width:8px;height:18px;border-radius:3px;}
+  .lineup-team .lt-name{display:flex;align-items:center;gap:8px;font-family:var(--body);font-weight:700;font-size:13px;margin-bottom:6px;min-width:0;overflow-wrap:anywhere;}
+  .lineup-team .lt-name .sw{width:8px;height:18px;border-radius:3px;flex-shrink:0;}
   .pchips{display:flex;gap:6px;flex-wrap:wrap;}
-  .pchip{flex:1;min-width:0;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:9px 8px;color:var(--ink);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;position:relative;}
-  .pchip .ct{display:block;font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:.04em;margin-top:2px;font-weight:700;}
+  .pchip{flex:1;min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:8px 6px;color:var(--ink);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;position:relative;overflow:hidden;text-overflow:ellipsis;}
+  .pchip .ct{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;margin-top:3px;font-weight:700;}
   .pchip.on{background:var(--gold);color:#2a1006;border-color:var(--gold);}
   .pchip.on .ct{color:#6b4a08;}
 
   .rrow{display:flex;align-items:center;gap:11px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:13px;padding:11px;margin-bottom:9px;border-left:5px solid var(--tc,var(--muted));}
-  .rrow .rtn{flex:1;font-family:var(--disp);font-size:18px;letter-spacing:.005em;min-width:0;}
-  .rrow .rpts{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold);min-width:42px;text-align:right;}
-  .place-sel{display:flex;gap:5px;}
-  .place-sel button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line-soft);background:transparent;color:var(--muted);font-family:var(--disp);font-size:15px;cursor:pointer;transition:all .12s;line-height:1;}
+  .rrow .rtn{flex:1;font-family:var(--disp);font-size:18px;letter-spacing:.005em;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rrow .rpts{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold);min-width:42px;text-align:right;flex-shrink:0;}
+  .place-sel{display:flex;gap:6px;flex-shrink:0;}
+  .place-sel button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line-soft);background:transparent;color:var(--muted);font-family:var(--disp);font-size:17px;cursor:pointer;transition:all .12s;line-height:1;}
   .place-sel button.sel{background:var(--gold);color:#2a1006;border-color:var(--gold);transform:scale(1.06);}
-  .won-toggle{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;border:1px solid var(--line-soft);background:transparent;color:var(--muted);border-radius:10px;padding:9px 13px;cursor:pointer;text-transform:uppercase;}
+  .won-toggle{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;border:1px solid var(--line-soft);background:transparent;color:var(--muted);border-radius:10px;min-height:44px;padding:0 16px;cursor:pointer;text-transform:uppercase;flex-shrink:0;}
   .won-toggle.on{background:var(--t3);color:#06140c;border-color:var(--t3);}
   .seed-hint{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--muted);line-height:1.5;}
   .seed-hint b{color:var(--gold);}
@@ -216,13 +220,13 @@
   .vs{display:flex;align-items:center;font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:700;}
 
   .modal-actions{display:flex;gap:9px;margin-top:8px;}
-  textarea.codearea{width:100%;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;color:var(--ink);font-family:var(--mono);font-size:11px;padding:11px;min-height:84px;resize:vertical;outline:none;margin-bottom:10px;word-break:break-all;}
+  textarea.codearea{width:100%;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;color:var(--ink);font-family:var(--mono);font-size:16px;padding:11px;min-height:84px;resize:vertical;outline:none;margin-bottom:10px;word-break:break-all;}
   .toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(100deg,#ff8a5c,var(--gold));color:#2a1006;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;padding:11px 18px;border-radius:99px;z-index:200;opacity:0;transition:all .3s;text-transform:uppercase;pointer-events:none;max-width:90%;text-align:center;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .empty{text-align:center;color:var(--muted);padding:30px 16px;font-size:14px;line-height:1.5;}
   .empty .big{font-family:var(--disp);font-size:21px;color:var(--ink);margin-bottom:8px;letter-spacing:.01em;}
   /* KICKOFF COUNTDOWN */
-  .lock-wrap{text-align:center;padding:34px 16px 70px;position:relative;}
+  .lock-wrap{text-align:center;padding:calc(34px + env(safe-area-inset-top)) 16px 70px;position:relative;}
   .lock-sun{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 50% 55%, rgba(255,194,75,.42), rgba(255,111,89,.16) 46%, transparent 70%);pointer-events:none;}
   .lock-badge{position:relative;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;}
   .lock-title{position:relative;font-family:var(--disp);font-size:clamp(40px,13vw,56px);line-height:.88;margin:14px 0 0;background:var(--sunset);-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -286,73 +290,38 @@
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-database-compat.js"></script>
 
+<!-- Pure game logic (scoring, standings, bracket, countdown, role gate). Plain static file. -->
+<script src="engine.js"></script>
+
 <script>
-/* ============ DATA ============ */
-const PALETTE = [
-  {name:'Coral', v:'#ff6f59'},{name:'Ocean', v:'#2fa8d0'},
-  {name:'Palm', v:'#3fc26e'},{name:'Sunset', v:'#ffb13b'},
-  {name:'Hibiscus', v:'#ff4f7d'},{name:'Surf', v:'#2fd0c0'},
-  {name:'Plum', v:'#a06bf0'},{name:'Mango', v:'#ffd23b'}
-];
-// count = players per team (1, 2, or 'all'); mode = placement | bracket | dodgeball
-const EVENTS = [
-  {n:1, name:'Smash', day:'FRI', count:1, mode:'bracket', note:'4-team single-elim bracket + 3rd-place game. Each team fields 1 player.'},
-  {n:2, name:'Mario Kart', day:'FRI', count:2, mode:'placement', note:'6 races — sum in-game points across both teammates, then enter the team finishing order.'},
-  {n:3, name:'Back-to-Back Drawing', day:'FRI', count:2, mode:'placement', judged:true, note:'Pairs sit back-to-back — one describes a hidden image, the partner draws it blind. Judged on likeness.'},
-  {n:4, name:'Knockout', day:'FRI', count:2, mode:'placement', note:'Last team with a player still alive = 1st.'},
-  {n:5, name:'Horse / Pig', day:'FRI', count:1, mode:'placement', note:'P-I-G free-for-all, last standing wins.'},
-  {n:6, name:'Cornhole', day:'FRI', count:1, mode:'placement', note:'Single elim, run live; enter the final order.'},
-  {n:7, name:'Pool Basketball 2v2', day:'FRI', count:2, mode:'bracket', note:'4-team single-elim bracket + 3rd-place game. No dunking. Each team fields 2 players.'},
-  {n:8, name:'Blackjack', day:'SAT', count:1, mode:'placement', note:'Equal chips, 10 hands, rank by chip count.'},
-  {n:9, name:'Dad Joke Off', day:'SAT', count:1, mode:'placement', note:'4 in a circle, 6 rounds, 1 pt per laugh you cause.'},
-  {n:10, name:'Beer Pong', day:'SAT', count:2, mode:'placement', note:'Single elim, run live; enter the final order.'},
-  {n:11, name:'Blindfold Guessing', day:'SAT', count:1, mode:'placement', note:'60s round, most correct, speed tiebreak.'},
-  {n:12, name:'Grilled Cheese Championship', day:'SAT', count:'all', mode:'placement', judged:true, note:'Draw a cheese + special ingredient. Judged: Execution / Pairing / Presentation.'},
-  {n:13, name:'Dodgeball', day:'SAT', count:'all', mode:'dodgeball', note:'Two alliances (seed 1st+4th vs 2nd+3rd). Winning teams +8 each, losing +2 each.'},
-  {n:14, name:'Lip Sync Battle', day:'SAT', count:'all', mode:'placement', judged:true, note:'DOUBLE POINTS FINALE — the whole team performs, full theatrics. The title gets won here.'},
-];
-const PTS = {standard:[10,6,3,1], finale:[20,12,6,2]};
-const DODGE_WIN=8, DODGE_LOSE=2;
-const MEDALS=['🥇','🥈','🥉','4️⃣'];
-const ptsArr = ev => ev.type==='finale'||ev.n===14 ? PTS.finale : PTS.standard;
-const isFinale = ev => ev.n===14;
+/* ============ DATA & PURE LOGIC ============ */
+/* PALETTE, EVENTS, PTS, DODGE_WIN/LOSE, MEDALS, REVEAL_AT, ptsArr, isFinale, countLabel,
+   defaultState, encState, decState, hashParams and the whole scoring / standings / bracket /
+   countdown / role engine now live in engine.js — exposed as window.KO plus a few globals
+   (EVENTS, PTS, MEDALS, ptsArr, isFinale, countLabel, defaultState, encState, decState,
+   hashParams …). The functions below are thin wrappers that pass this page's live `S`. */
 
 /* ============ STATE ============ */
 const KEY='kenolympics:v3';
 let S = defaultState();
 let VIEW_ONLY=false;
 
-/* ===== KICKOFF COUNTDOWN (non-editable / viewer side only) ===== */
-// Reveal at 10:30 PM Pacific on Thu June 4, 2026. June = PDT (UTC-7) -> 05:30 UTC on Jun 5.
-// (If you truly want PST / UTC-8, change the hour from 5 to 6 below.)
-const REVEAL_AT = Date.UTC(2026, 5, 5, 5, 30, 0);
-function isLocked(){ return VIEW_ONLY && Date.now() < REVEAL_AT; }
+/* ===== KICKOFF COUNTDOWN (viewers only; the editor is never locked) ===== */
+// REVEAL_AT lives in engine.js: 10:30 PM PT on Thu Jun 4 2026 (PDT) = 05:30 UTC Jun 5.
+// A snapshot (#v=) shows its frozen scores immediately (no countdown) so "live" stays honest.
+function isLocked(){ return !IS_SNAPSHOT && KO.isLockedAt(VIEW_ONLY, Date.now()); }
 let _tick=null;
 function ensureTick(){ if(_tick) return; _tick=setInterval(()=>{ if(isLocked()) updateCountdown(); else { clearInterval(_tick); _tick=null; render(); } }, 1000); }
 function fmt2(n){ return (n<10?'0':'')+n; }
-function countdownParts(){ let ms=Math.max(0, REVEAL_AT - Date.now()); const d=Math.floor(ms/86400000); ms-=d*86400000; const h=Math.floor(ms/3600000); ms-=h*3600000; const m=Math.floor(ms/60000); ms-=m*60000; const s=Math.floor(ms/1000); return {d,h,m,s}; }
-function defaultState(){
-  return {
-    setupDone:false,
-    teams:[0,1,2,3].map(i=>({
-      id:'t'+i, name:'Team '+(i+1), color:PALETTE[i].v,
-      players:[{name:'',cap:false},{name:'',cap:false},{name:'',cap:false}]
-    })),
-    results:{} // n -> {rank:[ids], lineup:{tid:[idx]}, bracket?:{}} | {win:[ids], lineup}
-  };
-}
+function countdownParts(){ return KO.countdownParts(Date.now()); }
+
 let activeTab='now';
 function persist(){ if(VIEW_ONLY) return; try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} cloudWrite(); }
 function loadState(){ try{ const v=localStorage.getItem(KEY); if(v){ const p=JSON.parse(v); if(p&&p.teams) return p; } }catch(e){} return null; }
-function encState(obj){ try{ return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))); }catch(e){ return ''; } }
-function decState(str){ try{ return JSON.parse(decodeURIComponent(escape(atob(str)))); }catch(e){ return null; } }
 
-/* ============ FIREBASE LIVE SYNC (optional) ============ */
-/* ▼▼▼ TO ENABLE LIVE SYNC: paste your Firebase web config below. ▼▼▼
-   Steps: create a free Firebase project → enable Realtime Database →
-   Project settings → Web app → copy the config. Leave blank to run local-only.
-   (A Firebase web config is NOT a secret — it is meant to ship in client code;
-   security comes from the database rules, not from hiding these values.) */
+/* ============ FIREBASE LIVE SYNC ============ */
+/* The Firebase web config is NOT a secret — it is meant to ship in client code;
+   security comes from the database rules, not from hiding these values. */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBHiQ7zHdRDAbz4fild31-UrIoox26bOF8",
   authDomain: "ken-olympics.firebaseapp.com",
@@ -362,49 +331,54 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "683208748590",
   appId: "1:683208748590:web:18d123d356b03e697e39bf"
 };
-/* ▲▲▲ nothing else to change ▲▲▲ */
+
+/* ===== ONE FIXED EVENT =====
+   The whole bachelor party is a single shared room — no codes, no "create event" step,
+   so it is impossible to accidentally fork into two competing scoreboards.
+     • Viewer link = the bare URL                   (post in the group chat)
+     • Editor link = the bare URL + #edit=<secret>  (you only — keep private)
+   Only the SHA-256 *hash* of the editor secret ships below; the secret itself never
+   appears in this file. To rotate it: sha256() a new secret, paste the hex here, and
+   rebuild your #edit= link. */
+const FIXED_ROOM = 'ken-olympics-2026';
+const EDITOR_KEY_HASH = '2ae5234d825e8f3702de70b946e8362594945b7e2bf18afbe333fcfe4efeb6ab';
+
 const CLOUD = !!(FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.apiKey && typeof firebase!=='undefined');
-let cloudRoom=null, IS_EDITOR=false, CLOUD_READY=false, fbDB=null;
-const ROOMKEY = KEY+':room';
-function genCode(n){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<n;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
-function hashParams(){ const h=(location.hash||'').replace(/^#/,''); const o={}; if(!h) return o; h.split('&').forEach(kv=>{ const i=kv.indexOf('='); const k=i<0?kv:kv.slice(0,i); const v=i<0?'':kv.slice(i+1); if(k) o[k]=decodeURIComponent(v); }); return o; }
-function savedRoom(){ try{ return JSON.parse(localStorage.getItem(ROOMKEY)||'null'); }catch(e){ return null; } }
-function saveRoom(room,editKey){ try{ localStorage.setItem(ROOMKEY, JSON.stringify({room,editKey})); }catch(e){} }
-function roomRef(id){ return fbDB.ref('rooms/'+id); }
+let IS_EDITOR=false, CLOUD_READY=false, fbDB=null, IS_SNAPSHOT=false, CONN_ERR=false;
+const EDITOR_FLAG = KEY+':editor';   // localStorage: this device has claimed commissioner
+const SECRET_KEY  = KEY+':secret';   // localStorage: editor secret, to rebuild the editor link
+function savedEditor(){ try{ return localStorage.getItem(EDITOR_FLAG)==='1'; }catch(e){ return false; } }
+function editorSecret(){ try{ return localStorage.getItem(SECRET_KEY)||''; }catch(e){ return ''; } }
+function roomRef(){ return fbDB.ref('rooms/'+FIXED_ROOM); }
 function cloudInit(){ try{ firebase.initializeApp(FIREBASE_CONFIG); fbDB=firebase.database(); return true; }catch(e){ console.warn('firebase init failed',e); return false; } }
-function createRoom(){
-  const room=genCode(5), editKey=genCode(4); cloudRoom=room; IS_EDITOR=true; VIEW_ONLY=false;
-  const local=loadState(); if(local) S=local;
-  roomRef(room).set({ state:S, editKey, updated:Date.now() })
-    .then(()=>{ CLOUD_READY=true; saveRoom(room,editKey); setupNav(); render(); toast('Live room created ✓'); })
-    .catch(e=>{ console.warn(e); cloudFallback('Could not reach Firebase'); });
-}
-function connectRoom(room, editKey){
-  cloudRoom=room;
-  roomRef(room).once('value').then(snap=>{
-    const data=snap.val();
-    if(!data){ if(editKey){ createRoom(); } else { VIEW_ONLY=true; CLOUD_READY=true; setupNav(); render(); toast('Room not found'); } return; }
-    if(data.state) S=data.state;
-    IS_EDITOR = !!(editKey && data.editKey && editKey===data.editKey);
-    VIEW_ONLY = !IS_EDITOR; CLOUD_READY=true;
-    if(IS_EDITOR){ saveRoom(room,editKey); }       /* editor: write-only from here */
-    else { roomRef(room).child('state').on('value', s=>{ const v=s.val(); if(v){ S=v; render(); } }); } /* viewer: live */
+
+function connect(){
+  const hp=hashParams();
+  IS_EDITOR = KO.resolveRole({ providedKey:hp.edit, editorKeyHash:EDITOR_KEY_HASH, savedEditor:savedEditor() })==='editor';
+  VIEW_ONLY = !IS_EDITOR;
+  if(IS_EDITOR){ try{ localStorage.setItem(EDITOR_FLAG,'1'); if(hp.edit) localStorage.setItem(SECRET_KEY, hp.edit); }catch(e){} }
+  roomRef().once('value').then(snap=>{
+    const data=snap.val(); CLOUD_READY=true; CONN_ERR=false;
+    if(IS_EDITOR){
+      if(data && data.state) S=data.state;                 // resume the live event
+      else { const local=loadState(); if(local) S=local; } // first setup: keep any local draft
+      cloudWrite();                                        // ensure the room exists for viewers
+    } else {
+      if(data && data.state) S=data.state;
+      roomRef().child('state').on('value', s=>{ const v=s.val(); if(v){ S=v; } render(); }); // viewer: live
+    }
     setupNav(); render();
-  }).catch(e=>{ console.warn(e); cloudFallback('Could not reach Firebase'); });
+  }).catch(e=>{ console.warn(e); cloudFallback('Could not reach the live scoreboard'); });
 }
-function cloudWrite(){ if(!(CLOUD && CLOUD_READY && IS_EDITOR && cloudRoom && fbDB)) return; try{ roomRef(cloudRoom).update({ state:S, updated:Date.now() }); }catch(e){} }
-function cloudFallback(msg){ CLOUD_READY=false; const p=loadState(); if(p) S=p; setupNav(); render(); if(msg) toast(msg+' — local mode'); }
+function cloudWrite(){ if(!(CLOUD && CLOUD_READY && IS_EDITOR && fbDB)) return; try{ roomRef().update({ state:S, updated:Date.now() }); }catch(e){} }
+function cloudFallback(msg){ CLOUD_READY=false; CONN_ERR=true; if(!VIEW_ONLY){ const p=loadState(); if(p) S=p; } setupNav(); render(); if(msg) toast(msg); }
 
 function boot(){
   const hp=hashParams();
-  if(hp.v){ const p=decState(hp.v); if(p&&p.teams){ S=p; VIEW_ONLY=true; setupNav(); render(); return; } } /* snapshot link */
-  if(CLOUD && cloudInit()){
-    if(hp.room){ connectRoom(hp.room, hp.edit||null); return; }
-    const sr=savedRoom();
-    if(sr&&sr.room){ connectRoom(sr.room, sr.editKey); return; }
-    createRoom(); return;
-  }
-  const p=loadState(); if(p) S=p; setupNav(); render(); /* local-only */
+  if(hp.v){ const p=decState(hp.v); if(p&&p.teams){ S=p; VIEW_ONLY=true; IS_SNAPSHOT=true; setupNav(); render(); return; } } /* frozen snapshot */
+  if(CLOUD && cloudInit()){ connect(); return; }
+  /* no Firebase available → run the event locally on this device (offline editor) */
+  const p=loadState(); if(p) S=p; IS_EDITOR=true; VIEW_ONLY=false; setupNav(); render();
 }
 function setupNav(){
   const navIn=$('#navIn'); const draftBtn=$('#navDraft');
@@ -418,8 +392,14 @@ function setupNav(){
 function setHeaderRole(){
   const role=$('#hdrRole'); if(!role) return;
   if(isLocked()){ role.innerHTML=''; return; }                 // countdown screen brands itself
-  if(VIEW_ONLY){ role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="live-dot-pill"><span class="dot"></span>LIVE</span>' : ''; }
-  else { role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="sync-pill">● Live synced</span>' : 'Commissioner HQ'; }
+  if(IS_SNAPSHOT){ role.innerHTML='<span class="sync-pill" style="color:var(--muted)">◌ SNAPSHOT · NOT LIVE</span>'; return; }
+  if(VIEW_ONLY){
+    role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="live-dot-pill"><span class="dot"></span>LIVE</span>'
+                   : CONN_ERR ? '<span class="sync-pill" style="color:var(--live)">⚠ OFFLINE</span>' : '';
+  } else {
+    role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="sync-pill">● Live synced</span>'
+                   : CONN_ERR ? '<span class="sync-pill" style="color:var(--coral)">● Offline · saved locally</span>' : 'Commissioner HQ';
+  }
 }
 
 /* ============ HELPERS ============ */
@@ -439,28 +419,13 @@ function lineupNames(t, ev){
   const lu=getLineup(ev.n); if(!lu||!lu[t.id]||!lu[t.id].length) return null;
   return lu[t.id].map(i=>pName(t,i));
 }
-function playerGames(ti,pi){ // how many events this player is recorded in (incl all-team)
-  let c=0;
-  EVENTS.forEach(ev=>{
-    const r=S.results[ev.n]; if(!r) return;
-    if(ev.count==='all'){ c++; return; }
-    if(r.lineup && r.lineup['t'+ti] && r.lineup['t'+ti].includes(pi)) c++;
-  });
-  return c;
-}
-function pointsForEvent(n){
-  const ev=EVENTS.find(e=>e.n===n); const r=S.results[n]; const out={};
-  S.teams.forEach(t=>out[t.id]=0); if(!r) return out;
-  if(ev.mode==='dodgeball'){ if(r.win) S.teams.forEach(t=>out[t.id]= r.win.includes(t.id)?DODGE_WIN:DODGE_LOSE); }
-  else { const arr=ptsArr(ev); if(r.rank) r.rank.forEach((id,i)=>{ if(out[id]!==undefined) out[id]=arr[i]||0; }); }
-  return out;
-}
-function totals(excl){ const tot={}; S.teams.forEach(t=>tot[t.id]=0);
-  EVENTS.forEach(e=>{ if(excl&&e.n===excl) return; const p=pointsForEvent(e.n); S.teams.forEach(t=>tot[t.id]+=p[t.id]); }); return tot; }
-function firstsCount(id){ let c=0; EVENTS.forEach(e=>{ const r=S.results[e.n]; if(r&&r.rank&&r.rank[0]===id) c++; }); return c; }
-function standings(excl){ const tot=totals(excl);
-  return [...S.teams].map(t=>({t, pts:tot[t.id], firsts:firstsCount(t.id)})).sort((a,b)=> b.pts-a.pts || b.firsts-a.firsts); }
-function countLabel(ev){ return ev.count==='all'?'Whole team':(ev.count+' / team'); }
+/* scoring / standings / bracket are pure — call the engine with this page's live S */
+const playerGames    = (ti,pi) => KO.playerGames(S,ti,pi);
+const pointsForEvent = n       => KO.pointsForEvent(S,n);
+const totals         = excl    => KO.totals(S,excl);
+const firstsCount    = id      => KO.firstsCount(S,id);
+const standings      = excl    => KO.standings(S,excl);
+const bracketSeed    = ev      => KO.bracketSeed(S,ev);
 
 /* ============ RENDER ============ */
 function render(){
@@ -470,8 +435,16 @@ function render(){
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     $('#view-lock').classList.add('active');
     document.querySelector('nav').style.display='none';
+    document.querySelector('header').style.display='none';   // full-screen countdown takeover
     $('#progBar').style.width='0%';
     ensureTick();
+    return;
+  }
+  document.querySelector('header').style.display='';
+  if(CONN_ERR && VIEW_ONLY && !IS_SNAPSHOT){
+    renderConnErr();
+    document.querySelector('nav').style.display='none';
+    $('#progBar').style.width='0%';
     return;
   }
   document.querySelector('nav').style.display='';
@@ -480,6 +453,12 @@ function render(){
   $('#view-'+activeTab).classList.add('active');
   $('#progBar').style.width = (doneCount()/EVENTS.length*100)+'%';
   renderNow(); renderSched(); renderScores(); if(!VIEW_ONLY) renderDraft();
+}
+function renderConnErr(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el=$('#view-now');
+  el.innerHTML=`<div class="empty" style="padding-top:64px;"><div class="big">Can’t reach the scoreboard</div>We couldn’t connect to the live server. Check your connection, then try again.<br><br><button class="btn primary" style="max-width:240px;margin:18px auto 0;" onclick="location.reload()">Retry</button></div>`;
+  el.classList.add('active');
 }
 function renderLock(){
   const el=$('#view-lock');
@@ -512,6 +491,10 @@ function renderNow(){
   const el=$('#view-now');
   if(!S.setupDone && !VIEW_ONLY){
     el.innerHTML=`<div class="stagger"><div class="card hero"><div class="enum">🤙 GET STARTED</div><h2>Run the Draft</h2><p class="note">Set up your 4 teams and players before the games begin. Head to the Draft tab to build the rosters — everything here updates automatically once you do.</p><button class="btn primary" onclick="go('draft')" style="margin-top:14px;">Open the Draft →</button></div></div>`;
+    return;
+  }
+  if(!S.setupDone && VIEW_ONLY){
+    el.innerHTML=`<div class="stagger"><div class="card hero" style="text-align:center;"><div class="enum">🌴 ALMOST THERE</div><h2 style="margin-top:8px;">Setting the stage</h2><p class="note">The commissioner is building the teams &amp; draft right now. The live scoreboard lights up here the moment the games begin — keep this tab open and it updates itself.</p></div></div>`;
     return;
   }
   const cur=currentEvent();
@@ -600,9 +583,9 @@ function renderScores(){
 function renderDraft(){
   const el=$('#view-draft');
   const teamCards=S.teams.map((t,ti)=>{
-    const colors=PALETTE.map(c=>`<button style="background:${c.v}" class="${t.color===c.v?'sel':''}" onclick="setColor(${ti},'${c.v}')"></button>`).join('');
-    const players=t.players.map((p,pi)=>`<div class="player-in"><span class="pbadge">P${pi+1}</span><input type="text" placeholder="Player ${pi+1} name" value="${esc(p.name)}" oninput="setPlayer(${ti},${pi},this.value)"><button class="cap-toggle ${p.cap?'on':''}" onclick="toggleCap(${ti},${pi})">©</button></div>`).join('');
-    return `<div class="team-edit" style="--tc:${t.color}"><div class="te-head"><input class="tname" value="${esc(t.name)}" oninput="setTeamName(${ti},this.value)" placeholder="Team name"><div class="colors">${colors}</div></div>${players}</div>`;
+    const colors=PALETTE.map(c=>`<button type="button" style="background:${c.v}" class="${t.color===c.v?'sel':''}" aria-label="${esc(c.name)}${t.color===c.v?' (selected)':''}" title="${esc(c.name)}" onclick="setColor(${ti},'${c.v}')"></button>`).join('');
+    const players=t.players.map((p,pi)=>`<div class="player-in"><span class="pbadge">P${pi+1}</span><input type="text" placeholder="Player ${pi+1} name" value="${esc(p.name)}" oninput="setPlayer(${ti},${pi},this.value)"><button type="button" class="cap-toggle ${p.cap?'on':''}" aria-pressed="${p.cap?'true':'false'}" aria-label="Captain" title="Mark captain" onclick="toggleCap(${ti},${pi})">©</button></div>`).join('');
+    return `<div class="team-edit" style="--tc:${t.color}"><div class="te-head"><input class="tname" value="${esc(t.name)}" oninput="setTeamName(${ti},this.value)" placeholder="Team name" aria-label="Team ${ti+1} name"><div class="colors-label">Team color</div><div class="colors">${colors}</div></div>${players}</div>`;
   }).join('');
   el.innerHTML=`<div class="stagger">
     <div class="eyebrow"><span>Team Rosters</span><span class="ln"></span></div>
@@ -620,7 +603,7 @@ function renderDraft(){
     </details>
     <div class="eyebrow" style="margin-top:18px;"><span>Backup & Reset</span><span class="ln"></span></div>
     <div class="util-row"><button class="btn ghost mini" onclick="openBackup()">Export / Import</button><button class="btn danger mini" onclick="confirmReset()">Reset All</button></div>
-    <p style="color:var(--muted);font-size:11.5px;line-height:1.5;margin:10px 2px 0;">${(CLOUD&&CLOUD_READY)?('✅ <b style=\"color:var(--t3)\">Live sync on</b> — room <b style=\"color:var(--ink)\">'+cloudRoom+'</b>. Share Live Link gives the group an auto-updating view.'):'💾 Saving locally on this device. <b style=\"color:var(--ink)\">Share Live Link</b> posts a read-only snapshot; re-share after updates. Add a Firebase config to the file for true live sync.'}</p>
+    <p style="color:var(--muted);font-size:11.5px;line-height:1.5;margin:10px 2px 0;">${(CLOUD&&CLOUD_READY)?('✅ <b style=\"color:var(--t3)\">Live sync on.</b> Share the viewer link — the group sees every result the moment you save it.'):(CONN_ERR?'⚠️ <b style=\"color:var(--coral)\">Offline.</b> Changes save on this device and sync when you reopen with a connection.':'💾 Saving locally on this device. <b style=\"color:var(--ink)\">Share Live Link</b> posts a read-only snapshot; re-share after updates.')}</p>
   </div>`;
 }
 
@@ -705,7 +688,6 @@ function renderDodgeRows(){ const c=$('#dodgeRows'); if(!c) return;
 }
 function toggleWin(id){ const i=draft.win.indexOf(id); if(i>=0) draft.win.splice(i,1); else { if(draft.win.length>=2){ toast('Only 2 teams win'); return; } draft.win.push(id); } renderDodgeRows(); }
 
-function bracketSeed(ev){ const s=standings(ev.n); return {A:s[0].t,B:s[3].t,C:s[1].t,D:s[2].t}; }
 function renderBracket(ev){
   const box=$('#bracketBox'); if(!box) return;
   const {A,B,C,D}=bracketSeed(ev); const br=draft.br;
@@ -739,11 +721,8 @@ function saveResult(){
   if(ev.mode==='dodgeball'){ if(draft.win.length!==2) return; S.results[draft.n]={win:[...draft.win], lineup}; }
   else if(ev.mode==='bracket'){
     if(!(draft.br.final && draft.br.third)) return;
-    const {A,B,C,D}=bracketSeed(ev); const br=draft.br;
-    const fin2 = (br.final===br.sf1)?br.sf2:br.sf1;
-    const sf1L = (br.sf1===A.id)?B.id:A.id; const sf2L=(br.sf2===C.id)?D.id:C.id;
-    const thirdL = (br.third===sf1L)?sf2L:sf1L;
-    S.results[draft.n]={rank:[br.final, fin2, br.third, thirdL], bracket:{...br}, lineup};
+    const rank = KO.deriveBracketRank(S, ev, draft.br);
+    S.results[draft.n]={rank, bracket:{...draft.br}, lineup};
   } else {
     if(draft.rank.filter(x=>x).length!==4) return;
     S.results[draft.n]={rank:[...draft.rank], lineup};
@@ -757,38 +736,51 @@ function setTeamName(ti,v){ S.teams[ti].name=v; persist(); }
 function setPlayer(ti,pi,v){ S.teams[ti].players[pi].name=v; persist(); }
 function setColor(ti,v){ S.teams[ti].color=v; persist(); renderDraft(); }
 function toggleCap(ti,pi){ S.teams[ti].players.forEach((p,i)=>p.cap=(i===pi)?!p.cap:false); persist(); renderDraft(); }
-function lockDraft(){ const named=S.teams.filter(t=>t.players.some(p=>p.name.trim())).length; if(named<4){ toast('Add players to all 4 teams'); } S.setupDone=true; persist(); render(); go('now'); toast('Rosters locked in 🏅'); }
+function lockDraft(){ const named=S.teams.filter(t=>t.players.some(p=>p.name.trim())).length; if(named<4){ toast('Add at least one player to all 4 teams'); return; } S.setupDone=true; persist(); render(); go('now'); toast('Rosters locked in 🏅'); }
 
 /* ============ SHARE / BACKUP ============ */
-function snapshotURL(){ return location.origin + location.pathname + '#v=' + encState(S); }
-function viewerURL(){ return location.origin + location.pathname + '#room=' + cloudRoom; }
-function editorURL(){ const sr=savedRoom(); return location.origin + location.pathname + '#room=' + cloudRoom + '&edit=' + (sr?sr.editKey:''); }
+function baseURL(){ return location.origin + location.pathname; }
+function snapshotURL(){ return baseURL() + '#v=' + encState(S); }
+function viewerURL(){ return baseURL(); }                              // bare URL = viewer
+function editorURL(){ const s=editorSecret(); return s ? baseURL()+'#edit='+encodeURIComponent(s) : ''; }
 function openShare(){
   const sheet=$('#sheet');
-  if(CLOUD && CLOUD_READY && cloudRoom){
-    sheet.innerHTML=`<div class="grab"></div><h3>Share Live Link</h3><div class="sh-sub">Auto-updating · no re-sharing</div>
+  if(CLOUD && CLOUD_READY){
+    const ed=editorURL();
+    const editorBlock = ed
+      ? `<details class="ref" style="margin-top:12px;"><summary>🔑 Your editor link — keep private <span class="ar">▾</span></summary><div class="ref-body"><p>Open this on any of <b>your</b> devices to score as commissioner. Never post it in the group — anyone who has it can edit.</p><textarea class="codearea" id="editArea" readonly>${esc(ed)}</textarea><button class="btn ghost mini" onclick="copyEdit()">Copy Editor Link</button></div></details>`
+      : `<details class="ref" style="margin-top:12px;"><summary>🔑 Your editor link <span class="ar">▾</span></summary><div class="ref-body"><p>Re-open this app from your original editor link (the one ending in <b>#edit=…</b>) and it will show here so you can copy it to another device.</p></div></details>`;
+    sheet.innerHTML=`<div class="grab"></div><h3>Share Live Link</h3><div class="sh-sub">Auto-updating · share once</div>
       <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 10px;">Everyone with this link watches the scoreboard update <b style="color:var(--ink)">live</b> as you record results. They're view-only.</p>
       <div class="seed-hint" style="margin-bottom:14px;">⏳ Until <b>Thu June 4, 10:30 PM PT</b>, viewers see a <b>countdown screen</b> — the events and scoreboard stay sealed, then reveal automatically at kickoff. You (the editor) are never locked, so you can set up the draft anytime.</div>
       <div class="sec-lbl">📣 Viewer link — post in the group<span style="flex:1;height:1px;background:var(--line-soft)"></span></div>
       <textarea class="codearea" id="shareArea" readonly>${esc(viewerURL())}</textarea>
       <div class="modal-actions"><button class="btn ghost" onclick="closeSheet()">Close</button><button class="btn share" onclick="copyShare()">Copy Viewer Link</button></div>
-      <details class="ref" style="margin-top:12px;"><summary>🔑 Your editor link — keep private <span class="ar">▾</span></summary><div class="ref-body"><p>Open this on any device to score as commissioner. Don't post it in the group.</p><textarea class="codearea" id="editArea" readonly>${esc(editorURL())}</textarea><button class="btn ghost mini" onclick="copyEdit()">Copy Editor Link</button></div></details>`;
+      ${editorBlock}`;
   } else {
-    sheet.innerHTML=`<div class="grab"></div><h3>Share Snapshot</h3><div class="sh-sub">Read-only standings for the group</div>
-      <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 14px;">This link bakes in the current scores (view-only) — it won't auto-update, so share a fresh one after recording results. <b style="color:var(--ink)">Add a Firebase config to the file for true live sync.</b></p>
+    sheet.innerHTML=`<div class="grab"></div><h3>Share Snapshot</h3><div class="sh-sub">Frozen standings · not live</div>
+      <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 14px;">This link bakes in the <b style="color:var(--ink)">current</b> scores (view-only) — it won't auto-update, so share a fresh one after recording results.</p>
       <textarea class="codearea" id="shareArea" readonly>${esc(snapshotURL())}</textarea>
       <div class="modal-actions"><button class="btn ghost" onclick="closeSheet()">Close</button><button class="btn share" onclick="copyShare()">Copy Link</button></div>`;
   }
   $('#overlay').classList.add('open');
 }
-function copyShare(){ const ta=$('#shareArea'); ta.select(); try{ navigator.clipboard.writeText(ta.value); toast('Link copied — paste in the group chat'); }catch(e){ document.execCommand('copy'); toast('Copied'); } }
-function copyEdit(){ const ta=$('#editArea'); ta.select(); try{ navigator.clipboard.writeText(ta.value); toast('Editor link copied'); }catch(e){ document.execCommand('copy'); toast('Copied'); } }
+/* robust copy: Clipboard API → execCommand → friendly manual fallback */
+function copyText(text, okMsg){
+  const ok=()=>toast(okMsg||'Copied ✓');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(ok, ()=>{ legacyCopy(text)?ok():toast('Couldn’t copy — press & hold the link'); });
+  } else { legacyCopy(text)?ok():toast('Couldn’t copy — press & hold the link'); }
+}
+function legacyCopy(text){ try{ const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta); ta.focus(); ta.select(); const r=document.execCommand('copy'); document.body.removeChild(ta); return r; }catch(e){ return false; } }
+function copyShare(){ const ta=$('#shareArea'); if(ta) ta.select(); copyText(ta?ta.value:viewerURL(), 'Link copied — paste in the group chat'); }
+function copyEdit(){ const ta=$('#editArea'); if(ta) ta.select(); copyText(ta?ta.value:editorURL(), 'Editor link copied — keep it private'); }
 function openBackup(){
   const sheet=$('#sheet');
   sheet.innerHTML=`<div class="grab"></div><h3>Backup</h3><div class="sh-sub">Copy to save · paste to restore</div><textarea class="codearea" id="codeArea">${esc(JSON.stringify(S))}</textarea><div class="modal-actions"><button class="btn ghost" onclick="importCode()">Import Pasted</button><button class="btn primary" onclick="copyCode()">Copy Code</button></div><button class="btn ghost mini" style="margin-top:10px;" onclick="closeSheet()">Close</button>`;
   $('#overlay').classList.add('open');
 }
-function copyCode(){ const ta=$('#codeArea'); ta.select(); try{ navigator.clipboard.writeText(ta.value); toast('Copied'); }catch(e){ document.execCommand('copy'); toast('Copied'); } }
+function copyCode(){ const ta=$('#codeArea'); if(ta) ta.select(); copyText(ta?ta.value:'', 'Copied ✓'); }
 function importCode(){ const v=$('#codeArea').value.trim(); try{ const p=JSON.parse(v); if(!p.teams) throw 0; S=p; persist(); closeSheet(); render(); toast('Restored ✓'); }catch(e){ toast('Invalid code'); } }
 function confirmReset(){ const sheet=$('#sheet'); sheet.innerHTML=`<div class="grab"></div><h3>Reset everything?</h3><div class="sh-sub">Clears all rosters and results</div><p style="color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:18px;">Can't be undone. Export a backup first if you want to keep this.</p><div class="modal-actions"><button class="btn ghost" onclick="closeSheet()">Cancel</button><button class="btn danger" onclick="doReset()">Reset All</button></div>`; $('#overlay').classList.add('open'); }
 function doReset(){ S=defaultState(); persist(); closeSheet(); activeTab='draft'; render(); toast('Reset complete'); }

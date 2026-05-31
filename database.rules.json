@@ -1,0 +1,22 @@
+{
+  "//": "Recommended Realtime Database rules for Ken Olympics. Apply in the Firebase console (Realtime Database → Rules) or `firebase deploy --only database`. See CHANGES.md → Security posture for the honest trade-offs. NOTE: without Firebase Auth these rules cannot verify the editor secret, so writes are open — the edit gate is enforced client-side only (a soft gate, fine for a party).",
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "$room": {
+        ".read": true,
+        ".write": "!newData.exists() || newData.hasChildren(['state', 'updated'])",
+        "updated": { ".validate": "newData.isNumber()" },
+        "state": {
+          ".validate": "newData.hasChildren(['teams'])",
+          "teams": { ".validate": "newData.hasChildren()" },
+          "results": { ".validate": "true" },
+          "setupDone": { ".validate": "newData.isBoolean()" },
+          "$other": { ".validate": "true" }
+        },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}
