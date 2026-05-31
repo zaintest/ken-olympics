@@ -41,6 +41,26 @@ test('deriveBracketRank always returns 4 distinct teams', () => {
   assert.strictEqual(new Set(rank).size, 4);
 });
 
+test('bracketView shows only the semifinals until both are decided', () => {
+  const s = KO.defaultState();
+  const ev = KO.EVENTS.find(e => e.n === 1);
+  assert.strictEqual(KO.bracketView(s, ev, {}).length, 2);
+  assert.strictEqual(KO.bracketView(s, ev, { sf1: 't0' }).length, 2);
+  assert.strictEqual(KO.bracketView(s, ev, { sf1: 't0', sf2: 't1' }).length, 4);
+});
+
+test('bracketView reports matchups, winners, and derived losers', () => {
+  const s = KO.defaultState();           // seeds A=t0 B=t3 C=t1 D=t2
+  const ev = KO.EVENTS.find(e => e.n === 1);
+  const v = KO.bracketView(s, ev, { sf1: 't0', sf2: 't1', final: 't0', third: 't3' });
+  assert.deepStrictEqual(v.map(x => [x.key, x.a, x.b, x.winner]), [
+    ['sf1', 't0', 't3', 't0'],
+    ['sf2', 't1', 't2', 't1'],
+    ['final', 't0', 't1', 't0'],
+    ['third', 't3', 't2', 't3']
+  ]);
+});
+
 test('only events 1 and 7 are brackets; Mario Kart (2) is plain placement', () => {
   assert.strictEqual(KO.EVENTS.find(e => e.n === 1).mode, 'bracket');
   assert.strictEqual(KO.EVENTS.find(e => e.n === 7).mode, 'bracket');

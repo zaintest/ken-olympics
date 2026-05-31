@@ -155,6 +155,25 @@
     return [br.final, fin2, br.third, thirdL];
   }
 
+  // A renderable, read-only view of the bracket (for viewers + the schedule). Returns the
+  // stages with team ids and the winner so far; the Final/3rd appear only once both semis
+  // are decided. `br` may be partial (live, mid-tournament) or complete.
+  function bracketView(S, ev, br) {
+    br = br || {};
+    const { A, B, C, D } = bracketSeed(S, ev);
+    const stages = [
+      { key: 'sf1', label: 'Semifinal 1', a: A.id, b: B.id, winner: br.sf1 || null },
+      { key: 'sf2', label: 'Semifinal 2', a: C.id, b: D.id, winner: br.sf2 || null }
+    ];
+    if (br.sf1 && br.sf2) {
+      const l1 = (br.sf1 === A.id) ? B.id : A.id;
+      const l2 = (br.sf2 === C.id) ? D.id : C.id;
+      stages.push({ key: 'final', label: 'Final',     a: br.sf1, b: br.sf2, winner: br.final || null });
+      stages.push({ key: 'third', label: '3rd-place', a: l1,     b: l2,     winner: br.third || null });
+    }
+    return stages;
+  }
+
   /* ---------------- COUNTDOWN / LOCK ---------------- */
   function countdownParts(now) {
     let ms = Math.max(0, REVEAL_AT - now);
@@ -246,7 +265,7 @@
     PALETTE, EVENTS, PTS, DODGE_WIN, DODGE_LOSE, MEDALS, REVEAL_AT,
     ptsArr, isFinale, countLabel, defaultState, encState, decState, hashParams,
     pointsForEvent, totals, firstsCount, standings, playerGames,
-    bracketSeed, deriveBracketRank, countdownParts, isLockedAt,
+    bracketSeed, deriveBracketRank, bracketView, countdownParts, isLockedAt,
     sha256Hex, resolveRole
   };
 

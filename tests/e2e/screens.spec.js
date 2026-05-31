@@ -59,6 +59,29 @@ test('scores + champion + share (finished)', async ({ page }) => {
   await shot(page, '07-champion');
 });
 
+test('bracket views — live on Now + completed on Schedule', async ({ page, context }) => {
+  const drafted = draftedState();
+  await page.clock.install({ time: AFTER });
+  await seedState(page, drafted);
+  await page.goto(viewerPath);
+
+  const editor = await context.newPage();
+  await seedState(editor, drafted);
+  await editor.goto(editorPath);
+  await editor.getByRole('button', { name: /record result/i }).click();
+  await editor.locator('.bstage', { hasText: 'Semifinal 1' }).locator('.mteam').first().click();
+  await editor.locator('.bstage', { hasText: 'Semifinal 2' }).locator('.mteam').first().click();
+  await expect(page.locator('.bview')).toBeVisible();
+  await shot(page, '11-viewer-live-bracket');
+
+  await editor.locator('.bstage', { hasText: '🥇' }).locator('.mteam').first().click();
+  await editor.locator('.bstage', { hasText: '🥉' }).locator('.mteam').first().click();
+  await editor.locator('#saveBtn').click();
+  await page.locator('.nav-btn[data-tab="sched"]').click();
+  await page.locator('.bracket-det summary').first().click();
+  await shot(page, '12-viewer-completed-bracket');
+});
+
 test('viewer countdown + live board (finished)', async ({ page }) => {
   await page.clock.install({ time: BEFORE });
   await seedState(page, finishedState());

@@ -165,6 +165,8 @@
   .ref-body{padding:0 16px 16px;}
   .ref-body p{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 10px;}
   .ref-body b{color:var(--ink);}
+  .bracket-det{margin-top:-2px;margin-bottom:9px;}
+  .bracket-det summary{padding:11px 14px;font-size:10px;color:var(--gold);}
   .util-row{display:flex;gap:8px;margin-top:4px;}
 
   nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:linear-gradient(180deg,rgba(21,16,31,.82),rgba(21,16,31,.99));backdrop-filter:blur(14px);border-top:1px solid var(--line);}
@@ -218,6 +220,20 @@
   .mteam.win .mn{color:#2a1006;}
   .mteam.dim{opacity:.45;}
   .vs{display:flex;align-items:center;font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:700;}
+
+  /* read-only bracket view (viewers + schedule) */
+  .bview{display:flex;flex-direction:column;gap:8px;}
+  .bvmatch{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;padding:9px 11px;}
+  .bvlbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:7px;}
+  .bvteam{display:flex;align-items:center;gap:8px;padding:5px 8px;border-left:3px solid var(--tc,var(--muted));border-radius:4px;}
+  .bvteam+.bvteam{margin-top:4px;}
+  .bvsw{width:7px;height:15px;border-radius:3px;flex-shrink:0;}
+  .bvn{font-family:var(--body);font-weight:600;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .bvteam.win{background:rgba(255,194,75,.12);}
+  .bvteam.win .bvn{color:var(--gold);}
+  .bvteam.win::after{content:'✓';margin-left:auto;color:var(--gold);font-weight:700;font-size:13px;flex-shrink:0;}
+  .bvteam.lose{opacity:.45;}
+  .bvteam.tbd .bvn{color:var(--muted);}
 
   .modal-actions{display:flex;gap:9px;margin-top:8px;}
   textarea.codearea{width:100%;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;color:var(--ink);font-family:var(--mono);font-size:16px;padding:11px;min-height:84px;resize:vertical;outline:none;margin-bottom:10px;word-break:break-all;}
@@ -427,6 +443,21 @@ const firstsCount    = id      => KO.firstsCount(S,id);
 const standings      = excl    => KO.standings(S,excl);
 const bracketSeed    = ev      => KO.bracketSeed(S,ev);
 
+/* read-only bracket tree (live mid-tournament + completed) shown to everyone */
+function bracketTreeHTML(ev, br){
+  const stages=KO.bracketView(S, ev, br||{});
+  const cell=(tid,winner)=>{
+    const t=team(tid); if(!t) return '';
+    const cls = winner ? (tid===winner?'win':'lose') : '';
+    return `<div class="bvteam ${cls}" style="--tc:${t.color}"><span class="bvsw" style="background:${t.color}"></span><span class="bvn">${esc(t.name)}</span></div>`;
+  };
+  const rows=stages.map(s=>{
+    const medal = s.key==='final'?' 🥇':s.key==='third'?' 🥉':'';
+    return `<div class="bvmatch"><div class="bvlbl">${s.label}${medal}</div>${cell(s.a,s.winner)}${cell(s.b,s.winner)}</div>`;
+  }).join('');
+  return `<div class="bview">${rows}</div>`;
+}
+
 /* ============ RENDER ============ */
 function render(){
   setHeaderRole();
@@ -526,6 +557,7 @@ function renderNow(){
       <div class="roster-mini">${rosterRows}</div>
       ${VIEW_ONLY?'':`<button class="btn primary" style="margin-top:16px;" onclick="openResult(${cur.n})">Record Result →</button>`}
     </div>
+    ${(S.liveBracket && S.liveBracket.n===cur.n)?`<div class="eyebrow" style="margin-top:14px;"><span>🏆 Bracket · live</span><span class="ln"></span></div><div class="card">${bracketTreeHTML(cur, S.liveBracket.br)}</div>`:''}
     ${next?`<div class="eyebrow"><span>On Deck</span><span class="ln"></span></div>
       <div class="card" ${VIEW_ONLY?'':`onclick="openResult(${next.n})" style="cursor:pointer;"`}>
         <div class="ondeck"><div class="n">${next.n}</div><div style="flex:1;"><div class="nm">${esc(next.name)}</div><div class="d">${next.day} · ${countLabel(next)}${next.mode==='bracket'?' · bracket':''}</div></div></div>
@@ -544,11 +576,14 @@ function renderSched(){
         if(ev.mode==='dodgeball'&&r.win){ winLine=`<div class="winner-tag" style="color:var(--t3)">🏐 ${r.win.map(teamName).map(esc).join(' + ')} won</div>`; }
         else if(r.rank){ const w=team(r.rank[0]); winLine=`<div class="winner-tag" style="color:${w.color}">🥇 ${esc(w.name)}</div>`; }
       }
+      const bracketBlock = (ev.mode==='bracket' && isDone && S.results[ev.n] && S.results[ev.n].bracket)
+        ? `<details class="ref bracket-det"><summary>🏆 View bracket <span class="ar">▾</span></summary><div class="ref-body" style="padding-top:2px;">${bracketTreeHTML(ev, S.results[ev.n].bracket)}</div></details>`
+        : '';
       return `<div class="ev ${isDone?'done':''} ${isCur?'current':''} ${VIEW_ONLY?'ro':''}" ${VIEW_ONLY?'':`onclick="openResult(${ev.n})"`}>
         <div class="idx">${ev.n}</div>
         <div class="body"><div class="nm">${esc(ev.name)}${isFinale(ev)?' 🎤':''}${ev.mode==='bracket'?' 🏆':''}</div><div class="sub">${countLabel(ev)}${ev.judged?' · judged':''}</div>${winLine}</div>
         ${stat}
-      </div>`;
+      </div>${bracketBlock}`;
     }).join('');
     return `<div class="day-tag">${label}<span class="cnt">${events.length} EVENTS</span></div>${items}`;
   };
@@ -704,9 +739,11 @@ function renderBracket(ev){
   }
   box.innerHTML=html; updateSaveState();
 }
-function pickSF(which,id){ draft.br[which]=id; draft.br.final=null; draft.br.third=null; renderBracket(EVENTS.find(e=>e.n===draft.n)); }
-function pickFinal(id){ draft.br.final=id; renderBracket(EVENTS.find(e=>e.n===draft.n)); }
-function pickThird(id){ draft.br.third=id; renderBracket(EVENTS.find(e=>e.n===draft.n)); }
+/* push the in-progress bracket to everyone as the editor taps winners (cleared on save/cancel) */
+function liveBracketPersist(){ if(VIEW_ONLY) return; const ev=EVENTS.find(e=>e.n===draft.n); if(!ev||ev.mode!=='bracket') return; S.liveBracket={n:draft.n, br:{...draft.br}}; persist(); }
+function pickSF(which,id){ draft.br[which]=id; draft.br.final=null; draft.br.third=null; renderBracket(EVENTS.find(e=>e.n===draft.n)); liveBracketPersist(); }
+function pickFinal(id){ draft.br.final=id; renderBracket(EVENTS.find(e=>e.n===draft.n)); liveBracketPersist(); }
+function pickThird(id){ draft.br.third=id; renderBracket(EVENTS.find(e=>e.n===draft.n)); liveBracketPersist(); }
 
 function updateSaveState(){
   const ev=EVENTS.find(e=>e.n===draft.n); let ok;
@@ -727,9 +764,10 @@ function saveResult(){
     if(draft.rank.filter(x=>x).length!==4) return;
     S.results[draft.n]={rank:[...draft.rank], lineup};
   }
+  S.liveBracket=null;                 // bracket finalised → drop the live preview
   persist(); closeSheet(); render(); toast('Saved · '+ev.name);
 }
-function closeSheet(){ $('#overlay').classList.remove('open'); }
+function closeSheet(){ if(S.liveBracket){ S.liveBracket=null; persist(); render(); } $('#overlay').classList.remove('open'); }
 
 /* ============ DRAFT EDITS ============ */
 function setTeamName(ti,v){ S.teams[ti].name=v; persist(); }

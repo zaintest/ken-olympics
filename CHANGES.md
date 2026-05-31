@@ -16,7 +16,10 @@ brackets only for events 1 & 7, reveal Thu Jun 4 2026 10:30 PM PT).
 - **Mobile/design pass**: real safe-area insets, 44-ish-px touch targets, 16px inputs (no
   iOS zoom), pinch-zoom restored, long-name overflow handled, focus states, honest
   error/empty states, font fallbacks.
-- **Built a real automated suite**: 39 Node unit tests + 54 Playwright E2E tests across
+- **Live bracket for everyone** (Smash & Pool Basketball): viewers watch the bracket light up
+  in real time as you record each match on the Now tab, and the finished bracket stays on the
+  Schedule under "🏆 View bracket."
+- **Built a real automated suite**: 41 Node unit tests + 58 Playwright E2E tests across
   **iPhone (WebKit)** and **Pixel (Chromium)**, including hermetic Firebase live-sync via
   an in-browser mock. One command: `npm test`. **All green.**
 
@@ -115,13 +118,15 @@ This is a **soft gate**, and that's an appropriate choice for a bachelor party:
 ---
 
 ## Tests & results
-- **Unit (Node, zero deps): 39 tests, all pass.** Scoring (standard/finale/dodgeball), totals,
-  first-place tiebreak, bracket derivation, countdown math + the exact `REVEAL_AT` instant,
-  `encState/decState` round-trip (emoji/accents), `sha256Hex` vs NIST + Node-crypto vectors,
-  `resolveRole`, and a rules-guard that pins the section-6 constants.
-- **E2E (Playwright, iPhone 13 / WebKit + Pixel 5 / Chromium): 54 tests, all pass.**
+- **Unit (Node, zero deps): 41 tests, all pass.** Scoring (standard/finale/dodgeball), totals,
+  first-place tiebreak, bracket derivation + bracket view, countdown math + the exact `REVEAL_AT`
+  instant, `encState/decState` round-trip (emoji/accents), `sha256Hex` vs NIST + Node-crypto
+  vectors, `resolveRole`, and a rules-guard that pins the section-6 constants.
+- **E2E (Playwright, iPhone 13 / WebKit + Pixel 5 / Chromium): 58 tests, all pass.**
   - Editor: draft → score **all 14 events** (placement, bracket, dodgeball, double finale) →
     champion; correct a saved result and watch points recompute; reload the bare URL and stay editor.
+  - Bracket: viewers see it light up live as the editor records each match, then on the Schedule
+    when done; cancelling clears the live preview.
   - Viewer: read-only (no Draft/record/share), live update lands on an editor change, countdown
     shows then **auto-reveals** at kickoff via a fake clock, snapshot is non-live.
   - Live sync (hermetic, in-browser Firebase mock): editor→viewer round-trip, a viewer joining
