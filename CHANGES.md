@@ -19,7 +19,10 @@ brackets only for events 1 & 7, reveal Thu Jun 4 2026 10:30 PM PT).
 - **Live bracket for everyone** (Smash & Pool Basketball): viewers watch the bracket light up
   in real time as you record each match on the Now tab, and the finished bracket stays on the
   Schedule under "🏆 View bracket."
-- **Built a real automated suite**: 41 Node unit tests + 58 Playwright E2E tests across
+- **Sandbox / rehearsal rooms**: open with `#room=<name>` for an isolated test room (own Firebase
+  node + own local storage, countdown off, purple "🧪 TEST ROOM" badge) so you can do a full live
+  dry run without touching the real event. The bare URL is always the real room — a sandbox can't fork it.
+- **Built a real automated suite**: 41 Node unit tests + 64 Playwright E2E tests across
   **iPhone (WebKit)** and **Pixel (Chromium)**, including hermetic Firebase live-sync via
   an in-browser mock. One command: `npm test`. **All green.**
 
@@ -122,7 +125,7 @@ This is a **soft gate**, and that's an appropriate choice for a bachelor party:
   first-place tiebreak, bracket derivation + bracket view, countdown math + the exact `REVEAL_AT`
   instant, `encState/decState` round-trip (emoji/accents), `sha256Hex` vs NIST + Node-crypto
   vectors, `resolveRole`, and a rules-guard that pins the section-6 constants.
-- **E2E (Playwright, iPhone 13 / WebKit + Pixel 5 / Chromium): 58 tests, all pass.**
+- **E2E (Playwright, iPhone 13 / WebKit + Pixel 5 / Chromium): 64 tests, all pass.**
   - Editor: draft → score **all 14 events** (placement, bracket, dodgeball, double finale) →
     champion; correct a saved result and watch points recompute; reload the bare URL and stay editor.
   - Bracket: viewers see it light up live as the editor records each match, then on the Schedule

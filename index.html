@@ -41,6 +41,7 @@
   .subline{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-top:5px;display:flex;align-items:center;gap:7px;position:relative;flex-wrap:wrap;}
   .subline .pin{color:var(--coral);}
   .view-pill{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.14em;color:#2a1006;background:var(--gold);border-radius:99px;padding:2px 8px;text-transform:uppercase;}
+  .test-pill{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.14em;color:#fff;background:#a06bf0;border-radius:99px;padding:2px 8px;text-transform:uppercase;}
   .sync-pill{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.14em;color:var(--t3);text-transform:uppercase;}
   .live-dot-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;color:var(--live);text-transform:uppercase;}
   .prog-wrap{margin-top:11px;height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;position:relative;}
@@ -325,15 +326,15 @@ let VIEW_ONLY=false;
 /* ===== KICKOFF COUNTDOWN (viewers only; the editor is never locked) ===== */
 // REVEAL_AT lives in engine.js: 10:30 PM PT on Thu Jun 4 2026 (PDT) = 05:30 UTC Jun 5.
 // A snapshot (#v=) shows its frozen scores immediately (no countdown) so "live" stays honest.
-function isLocked(){ return !IS_SNAPSHOT && KO.isLockedAt(VIEW_ONLY, Date.now()); }
+function isLocked(){ return !IS_SNAPSHOT && !IS_TEST && KO.isLockedAt(VIEW_ONLY, Date.now()); }
 let _tick=null;
 function ensureTick(){ if(_tick) return; _tick=setInterval(()=>{ if(isLocked()) updateCountdown(); else { clearInterval(_tick); _tick=null; render(); } }, 1000); }
 function fmt2(n){ return (n<10?'0':'')+n; }
 function countdownParts(){ return KO.countdownParts(Date.now()); }
 
 let activeTab='now';
-function persist(){ if(VIEW_ONLY) return; try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} cloudWrite(); }
-function loadState(){ try{ const v=localStorage.getItem(KEY); if(v){ const p=JSON.parse(v); if(p&&p.teams) return p; } }catch(e){} return null; }
+function persist(){ if(VIEW_ONLY) return; try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} cloudWrite(); }
+function loadState(){ try{ const v=localStorage.getItem(STORE); if(v){ const p=JSON.parse(v); if(p&&p.teams) return p; } }catch(e){} return null; }
 
 /* ============ FIREBASE LIVE SYNC ============ */
 /* The Firebase web config is NOT a secret — it is meant to ship in client code;
@@ -359,13 +360,22 @@ const FIREBASE_CONFIG = {
 const FIXED_ROOM = 'ken-olympics-2026';
 const EDITOR_KEY_HASH = '2ae5234d825e8f3702de70b946e8362594945b7e2bf18afbe333fcfe4efeb6ab';
 
+/* OPTIONAL SANDBOX — open with #room=<name> to use an ISOLATED test room: its own Firebase
+   node, its own local storage, and the kickoff countdown is OFF, so you can rehearse the whole
+   event without touching the real party data. The bare URL is ALWAYS the real room, so a test
+   room can never fork it. e.g.  #room=demo&edit=<secret> (editor) · #room=demo (viewer). */
+const _hp0 = hashParams();
+const IS_TEST = !!_hp0.room;
+const ROOM = IS_TEST ? ('test-' + (_hp0.room.replace(/[^A-Za-z0-9_-]/g,'').slice(0,32) || 'sandbox')) : FIXED_ROOM;
+const STORE = IS_TEST ? (KEY + ':' + ROOM) : KEY;   // separate local storage per room
+
 const CLOUD = !!(FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.apiKey && typeof firebase!=='undefined');
 let IS_EDITOR=false, CLOUD_READY=false, fbDB=null, IS_SNAPSHOT=false, CONN_ERR=false;
-const EDITOR_FLAG = KEY+':editor';   // localStorage: this device has claimed commissioner
-const SECRET_KEY  = KEY+':secret';   // localStorage: editor secret, to rebuild the editor link
+const EDITOR_FLAG = STORE+':editor';   // localStorage: this device has claimed commissioner (per room)
+const SECRET_KEY  = STORE+':secret';   // localStorage: editor secret, to rebuild the editor link
 function savedEditor(){ try{ return localStorage.getItem(EDITOR_FLAG)==='1'; }catch(e){ return false; } }
 function editorSecret(){ try{ return localStorage.getItem(SECRET_KEY)||''; }catch(e){ return ''; } }
-function roomRef(){ return fbDB.ref('rooms/'+FIXED_ROOM); }
+function roomRef(){ return fbDB.ref('rooms/'+ROOM); }
 function cloudInit(){ try{ firebase.initializeApp(FIREBASE_CONFIG); fbDB=firebase.database(); return true; }catch(e){ console.warn('firebase init failed',e); return false; } }
 
 function connect(){
@@ -409,13 +419,16 @@ function setHeaderRole(){
   const role=$('#hdrRole'); if(!role) return;
   if(isLocked()){ role.innerHTML=''; return; }                 // countdown screen brands itself
   if(IS_SNAPSHOT){ role.innerHTML='<span class="sync-pill" style="color:var(--muted)">◌ SNAPSHOT · NOT LIVE</span>'; return; }
+  let sig;
   if(VIEW_ONLY){
-    role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="live-dot-pill"><span class="dot"></span>LIVE</span>'
+    sig = (CLOUD&&CLOUD_READY) ? '<span class="live-dot-pill"><span class="dot"></span>LIVE</span>'
                    : CONN_ERR ? '<span class="sync-pill" style="color:var(--live)">⚠ OFFLINE</span>' : '';
   } else {
-    role.innerHTML = (CLOUD&&CLOUD_READY) ? '<span class="sync-pill">● Live synced</span>'
+    sig = (CLOUD&&CLOUD_READY) ? '<span class="sync-pill">● Live synced</span>'
                    : CONN_ERR ? '<span class="sync-pill" style="color:var(--coral)">● Offline · saved locally</span>' : 'Commissioner HQ';
   }
+  const testBadge = IS_TEST ? '<span class="test-pill">🧪 TEST ROOM</span>' : '';
+  role.innerHTML = testBadge + ((testBadge && sig) ? ' ' : '') + sig;
 }
 
 /* ============ HELPERS ============ */
@@ -778,9 +791,10 @@ function lockDraft(){ const named=S.teams.filter(t=>t.players.some(p=>p.name.tri
 
 /* ============ SHARE / BACKUP ============ */
 function baseURL(){ return location.origin + location.pathname; }
+function roomHash(extra){ const parts=[IS_TEST?('room='+encodeURIComponent(_hp0.room)):'', extra].filter(Boolean); return parts.length?('#'+parts.join('&')):''; }
 function snapshotURL(){ return baseURL() + '#v=' + encState(S); }
-function viewerURL(){ return baseURL(); }                              // bare URL = viewer
-function editorURL(){ const s=editorSecret(); return s ? baseURL()+'#edit='+encodeURIComponent(s) : ''; }
+function viewerURL(){ return baseURL() + roomHash(); }                 // real: bare URL · test: #room=…
+function editorURL(){ const s=editorSecret(); return s ? baseURL()+roomHash('edit='+encodeURIComponent(s)) : ''; }
 function openShare(){
   const sheet=$('#sheet');
   if(CLOUD && CLOUD_READY){

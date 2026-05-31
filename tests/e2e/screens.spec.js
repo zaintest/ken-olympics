@@ -59,6 +59,12 @@ test('scores + champion + share (finished)', async ({ page }) => {
   await shot(page, '07-champion');
 });
 
+test('test-room badge', async ({ page }) => {
+  await page.clock.install({ time: BEFORE });
+  await page.goto('/#room=demo&edit=33WX-SRGH-NNDF');     // editor, sandbox, before reveal
+  await shot(page, '13-test-room-badge');
+});
+
 test('bracket views — live on Now + completed on Schedule', async ({ page, context }) => {
   const drafted = draftedState();
   await page.clock.install({ time: AFTER });
