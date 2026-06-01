@@ -146,11 +146,15 @@
   }
 
   // From seed + picks {sf1,sf2,final,third} derive the final [1st,2nd,3rd,4th] team-id order.
+  // Uses the seed FROZEN at record time (br.seed) if present, so it stays correct even after
+  // later events shift the standings; falls back to live seeding for in-progress brackets.
   function deriveBracketRank(S, ev, br) {
-    const { A, B, C, D } = bracketSeed(S, ev);
+    let A, B, C, D;
+    if (br.seed && br.seed.length === 4) { [A, B, C, D] = br.seed; }
+    else { const s = bracketSeed(S, ev); A = s.A.id; B = s.B.id; C = s.C.id; D = s.D.id; }
     const fin2 = (br.final === br.sf1) ? br.sf2 : br.sf1;
-    const sf1L = (br.sf1 === A.id) ? B.id : A.id;
-    const sf2L = (br.sf2 === C.id) ? D.id : C.id;
+    const sf1L = (br.sf1 === A) ? B : A;
+    const sf2L = (br.sf2 === C) ? D : C;
     const thirdL = (br.third === sf1L) ? sf2L : sf1L;
     return [br.final, fin2, br.third, thirdL];
   }
@@ -160,14 +164,16 @@
   // are decided. `br` may be partial (live, mid-tournament) or complete.
   function bracketView(S, ev, br) {
     br = br || {};
-    const { A, B, C, D } = bracketSeed(S, ev);
+    let A, B, C, D;
+    if (br.seed && br.seed.length === 4) { [A, B, C, D] = br.seed; }   // frozen at record time
+    else { const s = bracketSeed(S, ev); A = s.A.id; B = s.B.id; C = s.C.id; D = s.D.id; }
     const stages = [
-      { key: 'sf1', label: 'Semifinal 1', a: A.id, b: B.id, winner: br.sf1 || null },
-      { key: 'sf2', label: 'Semifinal 2', a: C.id, b: D.id, winner: br.sf2 || null }
+      { key: 'sf1', label: 'Semifinal 1', a: A, b: B, winner: br.sf1 || null },
+      { key: 'sf2', label: 'Semifinal 2', a: C, b: D, winner: br.sf2 || null }
     ];
     if (br.sf1 && br.sf2) {
-      const l1 = (br.sf1 === A.id) ? B.id : A.id;
-      const l2 = (br.sf2 === C.id) ? D.id : C.id;
+      const l1 = (br.sf1 === A) ? B : A;
+      const l2 = (br.sf2 === C) ? D : C;
       stages.push({ key: 'final', label: 'Final',     a: br.sf1, b: br.sf2, winner: br.final || null });
       stages.push({ key: 'third', label: '3rd-place', a: l1,     b: l2,     winner: br.third || null });
     }

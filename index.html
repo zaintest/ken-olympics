@@ -691,6 +691,10 @@ function openResult(n){
   draft={n, rank:[], win:[], lineup:{}, br:{sf1:null,sf2:null,final:null,third:null}};
   const ex=S.results[n];
   if(ex){ if(ex.rank) draft.rank=[...ex.rank]; if(ex.win) draft.win=[...ex.win]; if(ex.lineup) draft.lineup=JSON.parse(JSON.stringify(ex.lineup)); if(ex.bracket) draft.br={...ex.bracket}; }
+  // freeze the bracket seeding for this entry (re-edits keep the original frozen seed)
+  if(ev.mode==='bracket' && !(draft.br.seed && draft.br.seed.length===4)){
+    const sd=bracketSeed(ev); draft.br.seed=[sd.A.id, sd.B.id, sd.C.id, sd.D.id];
+  }
 
   const sheet=$('#sheet');
   let resultUI='';
@@ -765,7 +769,10 @@ function toggleWin(id){ const i=draft.win.indexOf(id); if(i>=0) draft.win.splice
 
 function renderBracket(ev){
   const box=$('#bracketBox'); if(!box) return;
-  const {A,B,C,D}=bracketSeed(ev); const br=draft.br;
+  let A,B,C,D;
+  if(draft.br.seed && draft.br.seed.length===4){ [A,B,C,D]=draft.br.seed.map(id=>team(id)); }
+  else { ({A,B,C,D}=bracketSeed(ev)); }
+  const br=draft.br;
   const mteam=(t,winId,onclick)=>`<div class="mteam ${winId===t.id?'win':(winId?'dim':'')}" style="--tc:${t.color}" onclick="${onclick}"><span class="sw" style="display:inline-block;width:7px;height:16px;border-radius:3px;background:${t.color}"></span><span class="mn">${esc(t.name)}</span></div>`;
   let html=`<div class="bstage"><div class="blbl">Semifinal 1 (seed 1 v 4)</div><div class="match">${mteam(A,br.sf1,`pickSF('sf1','${A.id}')`)}<div class="vs">VS</div>${mteam(B,br.sf1,`pickSF('sf1','${B.id}')`)}</div></div>`;
   html+=`<div class="bstage"><div class="blbl">Semifinal 2 (seed 2 v 3)</div><div class="match">${mteam(C,br.sf2,`pickSF('sf2','${C.id}')`)}<div class="vs">VS</div>${mteam(D,br.sf2,`pickSF('sf2','${D.id}')`)}</div></div>`;

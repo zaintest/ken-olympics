@@ -61,6 +61,24 @@ test('bracketView reports matchups, winners, and derived losers', () => {
   ]);
 });
 
+test('bracketView uses the FROZEN seed — every match winner stays inside its match', () => {
+  const s = KO.defaultState();                       // live standings would seed t0,t3,t1,t2…
+  const ev = KO.EVENTS.find(e => e.n === 1);
+  // …but this bracket was PLAYED with a different seed (t3,t2,t1,t0); the frozen seed must win
+  const br = { seed: ['t3', 't2', 't1', 't0'], sf1: 't3', sf2: 't1', final: 't3', third: 't2' };
+  const v = KO.bracketView(s, ev, br);
+  assert.deepStrictEqual([v[0].a, v[0].b, v[0].winner], ['t3', 't2', 't3']); // SF1 = t3 v t2, t3 wins
+  assert.deepStrictEqual([v[1].a, v[1].b, v[1].winner], ['t1', 't0', 't1']); // SF2 = t1 v t0, t1 wins
+  for (const m of v) assert.ok(m.winner === m.a || m.winner === m.b, `orphan winner in ${m.key}`);
+});
+
+test('deriveBracketRank also honours the frozen seed', () => {
+  const s = KO.defaultState();
+  const ev = KO.EVENTS.find(e => e.n === 1);
+  const br = { seed: ['t3', 't2', 't1', 't0'], sf1: 't3', sf2: 't1', final: 't3', third: 't2' };
+  assert.deepStrictEqual(KO.deriveBracketRank(s, ev, br), ['t3', 't1', 't2', 't0']);
+});
+
 test('only events 1 and 7 are brackets; Mario Kart (2) is plain placement', () => {
   assert.strictEqual(KO.EVENTS.find(e => e.n === 1).mode, 'bracket');
   assert.strictEqual(KO.EVENTS.find(e => e.n === 7).mode, 'bracket');
