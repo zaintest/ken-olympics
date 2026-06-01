@@ -18,6 +18,15 @@ test('the sandbox is an isolated Firebase node — the real party room is untouc
   expect(db.rooms['ken-olympics-2026'], 'real room untouched').toBeFalsy();
 });
 
+test('&view=1 forces read-only even on a device that has claimed editor', async ({ page }) => {
+  await page.goto(`/#room=pv&edit=${EDITOR_SECRET}`);          // claim editor (saves the device flag)
+  await expect(page.locator('#navDraft')).toBeVisible();
+  await page.goto(`/#room=pv&edit=${EDITOR_SECRET}&view=1`);   // same device, force the guest view…
+  await page.reload();                                         // …as a fresh load (hash-only change won't re-run connect)
+  await expect(page.locator('#navDraft')).toBeHidden();
+  await expect(page.getByRole('button', { name: /record result/i })).toHaveCount(0);
+});
+
 test('editor → viewer live sync works inside a sandbox', async ({ page, context }) => {
   await page.clock.install({ time: BEFORE_REVEAL });
   await page.goto('/#room=live');                         // viewer first (read-only)

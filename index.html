@@ -395,6 +395,7 @@ function stopPoll(){ if(_poll){ clearInterval(_poll); _poll=null; } }
 function connect(){
   const hp=hashParams();
   IS_EDITOR = KO.resolveRole({ providedKey:hp.edit, editorKeyHash:EDITOR_KEY_HASH, savedEditor:savedEditor() })==='editor';
+  if(hp.view) IS_EDITOR=false;   // &view=1 forces the read-only viewer experience (preview / same-device testing)
   VIEW_ONLY = !IS_EDITOR;
   if(IS_EDITOR){ try{ localStorage.setItem(EDITOR_FLAG,'1'); if(hp.edit) localStorage.setItem(SECRET_KEY, hp.edit); }catch(e){} }
 
