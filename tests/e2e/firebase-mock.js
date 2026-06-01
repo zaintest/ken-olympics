@@ -65,8 +65,10 @@
     listeners.slice().forEach(function (l) { try { l.cb(snapshot(getAt(db, l.path))); } catch (e) {} });
   }
   function broadcast() { if (chan) chan.postMessage({ t: 1 }); }
+  // Two redundant cross-page delivery paths so a single dropped/late message under heavy
+  // parallel test load can't strand a listener (BroadcastChannel + the storage event).
   if (chan) chan.onmessage = function () { fireLocal(); };
-  else window.addEventListener('storage', function (e) { if (e.key === DB_KEY) fireLocal(); });
+  window.addEventListener('storage', function (e) { if (e.key === DB_KEY) fireLocal(); });
 
   function commit(path, value, merge) {
     if (!online) { buffer.push({ path: path, value: clone(value), merge: merge }); return; }
@@ -102,10 +104,13 @@
       if (!online) return rej(new Error('offline')); res(snapshot(getAt(loadDB(), p)));
     }); });
   };
-  Ref.prototype.on = function (event, cb) {
+  Ref.prototype.on = function (event, cb, errCb) {
     var l = { path: this.path, cb: cb }; listeners.push(l);
     var db = loadDB();
-    soon(function () { try { cb(snapshot(getAt(db, l.path))); } catch (e) {} });
+    soon(function () {
+      if (!online) { if (errCb) errCb(new Error('offline')); return; }   // simulate a dropped socket
+      try { cb(snapshot(getAt(db, l.path))); } catch (e) {}
+    });
     return cb;
   };
   Ref.prototype.off = function () { /* app never calls this */ };

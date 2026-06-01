@@ -1,0 +1,142 @@
+
+> ken-olympics@1.0.0 test
+> npm run test:unit && npm run test:e2e
+
+
+> ken-olympics@1.0.0 test:unit
+> node --test "tests/unit/**/*.test.js"
+
+✔ bracketSeed pairs 1v4 and 2v3 by current standings (0.6083ms)
+✔ deriveBracketRank: favourites hold serve → [A, C, B, D] (0.4428ms)
+✔ deriveBracketRank: upsets — lower seeds win both semis and the final (0.1099ms)
+✔ deriveBracketRank always returns 4 distinct teams (0.0807ms)
+✔ bracketView shows only the semifinals until both are decided (0.8683ms)
+✔ bracketView reports matchups, winners, and derived losers (0.1521ms)
+✔ only events 1 and 7 are brackets; Mario Kart (2) is plain placement (0.091ms)
+✔ REVEAL_AT is the exact UTC instant for 10:30 PM PDT, Thu Jun 4 2026 (0.8264ms)
+✔ REVEAL_AT is a fixed instant — identical no matter the device timezone (0.0759ms)
+✔ countdownParts breaks the remaining time into d/h/m/s (0.3975ms)
+✔ countdownParts clamps to zero at/after reveal (never negative) (0.0742ms)
+✔ isLockedAt: viewers are locked strictly before reveal (0.0736ms)
+✔ isLockedAt: the editor (viewOnly=false) is NEVER locked (0.0502ms)
+✔ exactly 14 events, numbered 1..14 (0.7214ms)
+✔ scoring tables are 10/6/3/1 and double 20/12/6/2 (0.0938ms)
+✔ dodgeball alliance points are 8 / 2 (0.0539ms)
+✔ event 13 is dodgeball, event 14 is the double finale (0.1074ms)
+✔ four teams of three; two non-playing commissioners are not modelled (0.1084ms)
+✔ per-event participation counts are 1, 2 or whole-team (0.0998ms)
+✔ placement event pays 10 / 6 / 3 / 1 (0.9ms)
+✔ Lip Sync finale (event 14) pays double 20 / 12 / 6 / 2 (0.1032ms)
+✔ only event 14 is doubled — event 12 is still standard (0.0694ms)
+✔ dodgeball (event 13) is alliance-based: winners +8, losers +2 (0.4687ms)
+✔ an unrecorded event scores zero for everyone (0.0925ms)
+✔ totals sum every event; totals(excl) drops one event (0.1528ms)
+✔ firstsCount only counts rank[0]; dodgeball wins are not "firsts" (0.1776ms)
+✔ standings sort by points (0.2378ms)
+✔ TIEBREAK: equal points → more 1st-place finishes ranks higher (0.1934ms)
+✔ full finished weekend: champion has the most points (0.279ms)
+✔ playerGames counts lineup appearances + whole-team events (0.1936ms)
+✔ sha256Hex matches published NIST vectors (0.5038ms)
+✔ sha256Hex agrees with Node crypto across many inputs (incl. unicode + long) (0.7555ms)
+✔ resolveRole: correct secret in the URL → editor (0.1181ms)
+✔ resolveRole: wrong or missing secret → viewer (0.0818ms)
+✔ resolveRole: a device that already claimed editor stays editor (no key needed) (0.4548ms)
+✔ the embedded hash in index.html matches the documented secret (0.4254ms)
+✔ encState → decState round-trips a full state (0.9029ms)
+✔ round-trips emoji and accents (UTF-8 safe) (0.139ms)
+✔ decState returns null on garbage (never throws) (0.0863ms)
+✔ hashParams parses #room/edit-style fragments (0.1422ms)
+✔ countLabel describes per-team counts (0.09ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.4795
+
+> ken-olympics@1.0.0 test:e2e
+> playwright test
+
+
+Running 78 tests using 12 workers
+
+  ok  2 [Mobile Chrome] › tests\e2e\countdown.spec.js:6:1 › the editor is NEVER locked — full app hours before kickoff (530ms)
+  ok  1 [Mobile Chrome] › tests\e2e\countdown.spec.js:14:1 › the editor is not locked even at the exact reveal instant (548ms)
+  ok 10 [Mobile Chrome] › tests\e2e\countdown.spec.js:33:1 › the countdown digits are rendered while sealed (508ms)
+  ok  5 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:28:1 › inputs are ≥16px so iOS Safari does not auto-zoom on focus (586ms)
+  ok  9 [Mobile Chrome] › tests\e2e\editor.spec.js:104:1 › reloading the bare URL keeps you the editor (one fixed event — no fork) (586ms)
+  -  17 [Mobile Chrome] › tests\e2e\screens.spec.js:15:1 › editor onboarding + draft
+  -  18 [Mobile Chrome] › tests\e2e\screens.spec.js:31:1 › now + result modal + schedule (drafted)
+  -  19 [Mobile Chrome] › tests\e2e\screens.spec.js:42:1 › placement modal with lineup picker (drafted)
+  -  20 [Mobile Chrome] › tests\e2e\screens.spec.js:50:1 › scores + champion + share (finished)
+  -  21 [Mobile Chrome] › tests\e2e\screens.spec.js:62:1 › test-room badge
+  -  22 [Mobile Chrome] › tests\e2e\screens.spec.js:68:1 › bracket views — live on Now + completed on Schedule
+  -  23 [Mobile Chrome] › tests\e2e\screens.spec.js:91:1 › viewer countdown + live board (finished)
+  ok  4 [Mobile Chrome] › tests\e2e\countdown.spec.js:21:1 › viewer is locked one second before reveal, live one second after (675ms)
+  ok  8 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:5:1 › interactive controls meet a comfortable touch-target size (755ms)
+  ok 12 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:35:1 › long names wrap cleanly — no clipping, no horizontal scroll (762ms)
+  ok 13 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:59:1 › safe-area insets are wired into the sticky chrome (288ms)
+  ok 14 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:74:1 › empty state: viewer arriving before the commissioner sets up (300ms)
+  ok 15 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:80:1 › error state: viewer cannot reach the live server (298ms)
+  ok  3 [Mobile Chrome] › tests\e2e\bracket.spec.js:50:1 › cancelling a bracket clears the live preview for viewers (878ms)
+  ok 24 [Mobile Chrome] › tests\e2e\smoke.spec.js:3:1 › harness: serves the app and injects the Firebase mock (no real CDN) (262ms)
+  ok 11 [Mobile Chrome] › tests\e2e\editor.spec.js:79:1 › correcting a saved result recomputes the standings (902ms)
+  ok 25 [Mobile Chrome] › tests\e2e\smoke.spec.js:9:1 › editor link → commissioner UI (Draft tab + live-synced header) (279ms)
+  ok 16 [Mobile Chrome] › tests\e2e\mobile-ui.spec.js:88:1 › zero console errors across a fully-populated viewer session (433ms)
+  ok 26 [Mobile Chrome] › tests\e2e\smoke.spec.js:20:1 › viewer link before kickoff → sealed countdown, no Draft tab (288ms)
+  ok 27 [Mobile Chrome] › tests\e2e\sync.spec.js:15:1 › edit gate: correct secret → editor (297ms)
+  ok 28 [Mobile Chrome] › tests\e2e\sync.spec.js:21:1 › edit gate: wrong secret → viewer (no editor powers) (288ms)
+  ok  7 [Mobile Chrome] › tests\e2e\bracket.spec.js:13:1 › viewers watch the bracket light up live, then see it on the schedule when done (1.1s)
+  ok 29 [Mobile Chrome] › tests\e2e\sync.spec.js:29:1 › edit gate: no secret → viewer (319ms)
+  ok 33 [Mobile Chrome] › tests\e2e\testroom.spec.js:13:1 › the sandbox is an isolated Firebase node — the real party room is untouched (268ms)
+  ok 32 [Mobile Chrome] › tests\e2e\testroom.spec.js:5:1 › a #room= sandbox skips the countdown and is clearly badged (293ms)
+  ok 36 [Mobile Chrome] › tests\e2e\viewer.spec.js:22:1 › the live signal is honest: viewer shows LIVE only on a real connection (287ms)
+  ok 35 [Mobile Chrome] › tests\e2e\viewer.spec.js:6:1 › viewer link is strictly read-only: no Draft tab, no record/edit buttons (387ms)
+  ok 37 [Mobile Chrome] › tests\e2e\viewer.spec.js:56:1 › countdown is shown before kickoff, then auto-reveals at kickoff (329ms)
+  ok 39 [Mobile Chrome] › tests\e2e\viewer.spec.js:73:1 › snapshot link (#v=) is clearly non-live and bypasses the countdown (350ms)
+  ok 34 [Mobile Chrome] › tests\e2e\testroom.spec.js:21:1 › editor → viewer live sync works inside a sandbox (723ms)
+  ok 30 [Mobile Chrome] › tests\e2e\sync.spec.js:36:1 › a viewer joining mid-event sees the current standings (reconnect) (972ms)
+  ok 38 [Mobile Chrome] › tests\e2e\viewer.spec.js:29:1 › an editor result lands on the viewer live (no refresh) (879ms)
+  ok 31 [Mobile Chrome] › tests\e2e\sync.spec.js:56:1 › offline → online: an edit made while disconnected syncs on reconnect (1.2s)
+  ok 42 [Mobile Safari] › tests\e2e\countdown.spec.js:6:1 › the editor is NEVER locked — full app hours before kickoff (661ms)
+  ok 43 [Mobile Safari] › tests\e2e\countdown.spec.js:14:1 › the editor is not locked even at the exact reveal instant (643ms)
+  ok 45 [Mobile Safari] › tests\e2e\countdown.spec.js:33:1 › the countdown digits are rendered while sealed (699ms)
+  ok 44 [Mobile Safari] › tests\e2e\countdown.spec.js:21:1 › viewer is locked one second before reveal, live one second after (898ms)
+  ok 48 [Mobile Safari] › tests\e2e\editor.spec.js:104:1 › reloading the bare URL keeps you the editor (one fixed event — no fork) (765ms)
+  ok 52 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:59:1 › safe-area insets are wired into the sticky chrome (615ms)
+  -  56 [Mobile Safari] › tests\e2e\screens.spec.js:15:1 › editor onboarding + draft
+  -  57 [Mobile Safari] › tests\e2e\screens.spec.js:31:1 › now + result modal + schedule (drafted)
+  -  58 [Mobile Safari] › tests\e2e\screens.spec.js:42:1 › placement modal with lineup picker (drafted)
+  -  59 [Mobile Safari] › tests\e2e\screens.spec.js:50:1 › scores + champion + share (finished)
+  -  60 [Mobile Safari] › tests\e2e\screens.spec.js:62:1 › test-room badge
+  -  61 [Mobile Safari] › tests\e2e\screens.spec.js:68:1 › bracket views — live on Now + completed on Schedule
+  -  62 [Mobile Safari] › tests\e2e\screens.spec.js:91:1 › viewer countdown + live board (finished)
+  ok 53 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:74:1 › empty state: viewer arriving before the commissioner sets up (572ms)
+  ok 54 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:80:1 › error state: viewer cannot reach the live server (495ms)
+  ok 51 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:28:1 › inputs are ≥16px so iOS Safari does not auto-zoom on focus (907ms)
+  ok 63 [Mobile Safari] › tests\e2e\smoke.spec.js:3:1 › harness: serves the app and injects the Firebase mock (no real CDN) (442ms)
+  ok 64 [Mobile Safari] › tests\e2e\smoke.spec.js:9:1 › editor link → commissioner UI (Draft tab + live-synced header) (423ms)
+  ok 41 [Mobile Safari] › tests\e2e\bracket.spec.js:50:1 › cancelling a bracket clears the live preview for viewers (2.1s)
+  ok 65 [Mobile Safari] › tests\e2e\smoke.spec.js:20:1 › viewer link before kickoff → sealed countdown, no Draft tab (465ms)
+  ok 66 [Mobile Safari] › tests\e2e\sync.spec.js:15:1 › edit gate: correct secret → editor (484ms)
+  ok 67 [Mobile Safari] › tests\e2e\sync.spec.js:21:1 › edit gate: wrong secret → viewer (no editor powers) (465ms)
+  ok 50 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:5:1 › interactive controls meet a comfortable touch-target size (1.6s)
+  ok 68 [Mobile Safari] › tests\e2e\sync.spec.js:29:1 › edit gate: no secret → viewer (545ms)
+  ok 71 [Mobile Safari] › tests\e2e\testroom.spec.js:5:1 › a #room= sandbox skips the countdown and is clearly badged (470ms)
+  ok 55 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:88:1 › zero console errors across a fully-populated viewer session (1.4s)
+  ok 49 [Mobile Safari] › tests\e2e\mobile-ui.spec.js:35:1 › long names wrap cleanly — no clipping, no horizontal scroll (2.1s)
+  ok 72 [Mobile Safari] › tests\e2e\testroom.spec.js:13:1 › the sandbox is an isolated Firebase node — the real party room is untouched (537ms)
+  ok 75 [Mobile Safari] › tests\e2e\viewer.spec.js:22:1 › the live signal is honest: viewer shows LIVE only on a real connection (568ms)
+  ok 77 [Mobile Safari] › tests\e2e\viewer.spec.js:56:1 › countdown is shown before kickoff, then auto-reveals at kickoff (598ms)
+  ok 47 [Mobile Safari] › tests\e2e\editor.spec.js:79:1 › correcting a saved result recomputes the standings (3.2s)
+  ok 74 [Mobile Safari] › tests\e2e\viewer.spec.js:6:1 › viewer link is strictly read-only: no Draft tab, no record/edit buttons (1.2s)
+  ok 78 [Mobile Safari] › tests\e2e\viewer.spec.js:73:1 › snapshot link (#v=) is clearly non-live and bypasses the countdown (868ms)
+  ok 40 [Mobile Safari] › tests\e2e\bracket.spec.js:13:1 › viewers watch the bracket light up live, then see it on the schedule when done (4.0s)
+  ok  6 [Mobile Chrome] › tests\e2e\editor.spec.js:51:1 › full editor flow: draft → score all 14 events → champion crowned (5.7s)
+  ok 73 [Mobile Safari] › tests\e2e\testroom.spec.js:21:1 › editor → viewer live sync works inside a sandbox (1.7s)
+  ok 69 [Mobile Safari] › tests\e2e\sync.spec.js:36:1 › a viewer joining mid-event sees the current standings (reconnect) (3.6s)
+  ok 70 [Mobile Safari] › tests\e2e\sync.spec.js:56:1 › offline → online: an edit made while disconnected syncs on reconnect (3.8s)
+  ok 76 [Mobile Safari] › tests\e2e\viewer.spec.js:29:1 › an editor result lands on the viewer live (no refresh) (3.3s)
+  ok 46 [Mobile Safari] › tests\e2e\editor.spec.js:51:1 › full editor flow: draft → score all 14 events → champion crowned (34.3s)

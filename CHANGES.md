@@ -98,6 +98,13 @@ You chose the simplest model, and it's also the most robust:
 ### Live sync
 - Same `rooms/{room}` model and editor-writes / viewer-`.on('value')` design, now pointed at
   the single fixed room. The editor seeds the room on first connect so viewers always have data.
+- **Connection resilience (important).** The first cut gated everything on a single SDK read, so a
+  blip on the realtime WebSocket stranded viewers on an "offline" screen. Now: viewers attach the
+  live listener directly (self-healing across blips) and, if the socket hasn't delivered in ~6s,
+  fall back to **plain-HTTPS REST polling** of the same database; the editor writes via the socket
+  **and** REST. So the scoreboard keeps working even on networks/browsers that block Firebase's
+  WebSocket (verified: REST read/write/delete all return 200 against the live DB). REST is skipped
+  under the test mock so the suite stays hermetic.
 
 ### Security
 - The editor secret is no longer plaintext-in-source: only its **SHA-256 hash** ships in

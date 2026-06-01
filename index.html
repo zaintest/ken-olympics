@@ -378,25 +378,49 @@ function editorSecret(){ try{ return localStorage.getItem(SECRET_KEY)||''; }catc
 function roomRef(){ return fbDB.ref('rooms/'+ROOM); }
 function cloudInit(){ try{ firebase.initializeApp(FIREBASE_CONFIG); fbDB=firebase.database(); return true; }catch(e){ console.warn('firebase init failed',e); return false; } }
 
+/* ---- Transport: the SDK realtime socket is the fast path; a plain-HTTPS REST fallback keeps
+   the scoreboard working even on networks/browsers that block Firebase's WebSocket. REST is
+   skipped under the test mock so the E2E suite stays hermetic. ---- */
+const DB_URL = (FIREBASE_CONFIG.databaseURL||'').replace(/\/+$/,'');
+function usingMock(){ return !!(typeof firebase!=='undefined' && firebase.__mock); }
+async function restRead(){ if(usingMock()||!DB_URL) return undefined;
+  try{ const r=await fetch(DB_URL+'/rooms/'+ROOM+'/state.json',{cache:'no-store'}); if(!r.ok) return undefined; return await r.json(); }catch(e){ return undefined; } }
+function restWrite(){ if(usingMock()||!DB_URL) return;
+  try{ fetch(DB_URL+'/rooms/'+ROOM+'.json',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,updated:Date.now()})}); }catch(e){} }
+let _poll=null;
+function startPoll(){ if(_poll||usingMock()||!DB_URL) return;
+  _poll=setInterval(async ()=>{ const v=await restRead(); if(v!==undefined){ CLOUD_READY=true; CONN_ERR=false; if(v) S=v; setupNav(); render(); } }, 4000); }
+function stopPoll(){ if(_poll){ clearInterval(_poll); _poll=null; } }
+
 function connect(){
   const hp=hashParams();
   IS_EDITOR = KO.resolveRole({ providedKey:hp.edit, editorKeyHash:EDITOR_KEY_HASH, savedEditor:savedEditor() })==='editor';
   VIEW_ONLY = !IS_EDITOR;
   if(IS_EDITOR){ try{ localStorage.setItem(EDITOR_FLAG,'1'); if(hp.edit) localStorage.setItem(SECRET_KEY, hp.edit); }catch(e){} }
-  roomRef().once('value').then(snap=>{
-    const data=snap.val(); CLOUD_READY=true; CONN_ERR=false;
-    if(IS_EDITOR){
-      if(data && data.state) S=data.state;                 // resume the live event
-      else { const local=loadState(); if(local) S=local; } // first setup: keep any local draft
-      cloudWrite();                                        // ensure the room exists for viewers
-    } else {
-      if(data && data.state) S=data.state;
-      roomRef().child('state').on('value', s=>{ const v=s.val(); if(v){ S=v; } render(); }); // viewer: live
-    }
-    setupNav(); render();
-  }).catch(e=>{ console.warn(e); cloudFallback('Could not reach the live scoreboard'); });
+
+  if(IS_EDITOR){
+    const begin=(state)=>{ CLOUD_READY=true; CONN_ERR=false; if(state) S=state; else { const local=loadState(); if(local) S=local; } cloudWrite(); setupNav(); render(); };
+    roomRef().once('value').then(s=>{ const d=s.val(); begin(d&&d.state?d.state:null); })
+      .catch(async e=>{ console.warn('editor SDK read failed, trying REST',e); const v=await restRead();
+        if(v!==undefined){ begin(v||null); }
+        else { CONN_ERR=true; CLOUD_READY=true; const local=loadState(); if(local) S=local; cloudWrite(); setupNav(); render(); } });
+  } else {
+    let got=false;
+    const onData=(v)=>{ got=true; CLOUD_READY=true; CONN_ERR=false; stopPoll(); if(v){ S=v; } setupNav(); render(); };
+    try{ roomRef().child('state').on('value', s=>onData(s.val()),
+      e=>{ console.warn('rtdb listen error',e); if(!got){ CONN_ERR=true; setupNav(); render(); startPoll(); } }); }
+    catch(e){ console.warn(e); }
+    // If the socket hasn't delivered shortly, fall back to REST (and keep the live listener — it self-heals).
+    setTimeout(async ()=>{
+      if(got) return;
+      const v=await restRead();
+      if(v!==undefined){ CLOUD_READY=true; CONN_ERR=false; if(v) S=v; setupNav(); render(); }
+      else { CONN_ERR=true; setupNav(); render(); }
+      startPoll();
+    }, 6000);
+  }
 }
-function cloudWrite(){ if(!(CLOUD && CLOUD_READY && IS_EDITOR && fbDB)) return; try{ roomRef().update({ state:S, updated:Date.now() }); }catch(e){} }
+function cloudWrite(){ if(!(CLOUD && CLOUD_READY && IS_EDITOR)) return; try{ if(fbDB) roomRef().update({ state:S, updated:Date.now() }); }catch(e){} restWrite(); }
 function cloudFallback(msg){ CLOUD_READY=false; CONN_ERR=true; if(!VIEW_ONLY){ const p=loadState(); if(p) S=p; } setupNav(); render(); if(msg) toast(msg); }
 
 function boot(){
