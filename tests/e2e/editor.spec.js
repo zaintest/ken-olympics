@@ -1,4 +1,4 @@
-const { test, expect, editorPath, viewerPath, seedState, finishedState } = require('./helpers');
+const { test, expect, KO, editorPath, viewerPath, seedState, finishedState } = require('./helpers');
 
 const TEAMS = ['Sharks', 'Goblins', 'Pirates', 'Wolves'];
 const PLAYERS = [['Andre', 'Ben', 'Cy'], ['Deon', 'Eli', 'Finn'], ['Gus', 'Hank', 'Ivo'], ['Jax', 'Kel', 'Lou']];
@@ -21,13 +21,14 @@ async function runDraft(page) {
 }
 
 async function recordCurrent(page, n) {
+  const ev = KO.EVENTS.find(e => e.n === n);
   await page.getByRole('button', { name: /record result/i }).click();
   await expect(page.locator('#overlay')).toHaveClass(/open/);
 
-  if (n === 13) {                                   // dodgeball: pick the two winning teams
+  if (ev.mode === 'dodgeball') {                    // dodgeball: pick the two winning teams
     await page.locator('#dodgeRows .rrow', { hasText: 'Sharks' }).locator('.won-toggle').click();
     await page.locator('#dodgeRows .rrow', { hasText: 'Goblins' }).locator('.won-toggle').click();
-  } else if (n === 1 || n === 7) {                  // bracket: SF winners → final → 3rd
+  } else if (ev.mode === 'bracket') {               // bracket: SF winners → final → 3rd
     await page.locator('.bstage', { hasText: 'Semifinal 1' }).locator('.mteam').first().click();
     await page.locator('.bstage', { hasText: 'Semifinal 2' }).locator('.mteam').first().click();
     await page.locator('.bstage', { hasText: '🥇' }).locator('.mteam').first().click();

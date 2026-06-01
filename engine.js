@@ -29,12 +29,12 @@
     { n: 5,  name: 'Horse / Pig',                 day: 'FRI', count: 1,     mode: 'placement', note: 'P-I-G free-for-all, last standing wins.' },
     { n: 6,  name: 'Cornhole',                    day: 'FRI', count: 1,     mode: 'placement', note: 'Single elim, run live; enter the final order.' },
     { n: 7,  name: 'Pool Basketball 2v2',         day: 'FRI', count: 2,     mode: 'bracket',   note: '4-team single-elim bracket + 3rd-place game. No dunking. Each team fields 2 players.' },
-    { n: 8,  name: 'Blackjack',                   day: 'SAT', count: 1,     mode: 'placement', note: 'Equal chips, 10 hands, rank by chip count.' },
-    { n: 9,  name: 'Dad Joke Off',                day: 'SAT', count: 1,     mode: 'placement', note: '4 in a circle, 6 rounds, 1 pt per laugh you cause.' },
-    { n: 10, name: 'Beer Pong',                   day: 'SAT', count: 2,     mode: 'placement', note: 'Single elim, run live; enter the final order.' },
-    { n: 11, name: 'Blindfold Guessing',          day: 'SAT', count: 1,     mode: 'placement', note: '60s round, most correct, speed tiebreak.' },
-    { n: 12, name: 'Grilled Cheese Championship', day: 'SAT', count: 'all', mode: 'placement', judged: true, note: 'Draw a cheese + special ingredient. Judged: Execution / Pairing / Presentation.' },
-    { n: 13, name: 'Dodgeball',                   day: 'SAT', count: 'all', mode: 'dodgeball', note: 'Two alliances (seed 1st+4th vs 2nd+3rd). Winning teams +8 each, losing +2 each.' },
+    { n: 8,  name: 'Dodgeball',                   day: 'SAT', count: 'all', mode: 'dodgeball', note: 'Two alliances (seed 1st+4th vs 2nd+3rd). Winning teams +8 each, losing +2 each.' },
+    { n: 9,  name: 'Grilled Cheese Championship', day: 'SAT', count: 'all', mode: 'placement', judged: true, note: 'Draw a cheese + special ingredient. Judged: Execution / Pairing / Presentation.' },
+    { n: 10, name: 'Blindfold Guessing',          day: 'SAT', count: 1,     mode: 'placement', note: '60s round, most correct, speed tiebreak.' },
+    { n: 11, name: 'Blackjack',                   day: 'SAT', count: 1,     mode: 'placement', note: 'Equal chips, 10 hands, rank by chip count.' },
+    { n: 12, name: 'Beer Pong',                   day: 'SAT', count: 2,     mode: 'placement', note: 'Single elim, run live; enter the final order.' },
+    { n: 13, name: 'Dad Joke Off',                day: 'SAT', count: 1,     mode: 'placement', note: '4 in a circle, 6 rounds, 1 pt per laugh you cause.' },
     { n: 14, name: 'Lip Sync Battle',             day: 'SAT', count: 'all', mode: 'placement', judged: true, note: 'DOUBLE POINTS FINALE — the whole team performs, full theatrics. The title gets won here.' }
   ];
 

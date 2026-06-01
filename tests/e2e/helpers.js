@@ -54,11 +54,9 @@ function draftedState() {
 // a fully-played weekend so standings/champion can be asserted deterministically
 function finishedState() {
   const s = draftedState();
-  const ids = ['t0', 't1', 't2', 't3'];
-  // events 1-12 placement/bracket: t0 keeps winning
-  for (let n = 1; n <= 12; n++) s.results[n] = { rank: ['t0', 't1', 't2', 't3'] };
-  s.results[13] = { win: ['t0', 't1'] };                 // dodgeball alliance
-  s.results[14] = { rank: ['t0', 't1', 't2', 't3'] };    // double finale
+  KO.EVENTS.forEach(e => {                                // t0 wins everything
+    s.results[e.n] = e.mode === 'dodgeball' ? { win: ['t0', 't1'] } : { rank: ['t0', 't1', 't2', 't3'] };
+  });
   return s;
 }
 

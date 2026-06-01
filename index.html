@@ -608,7 +608,7 @@ function renderSched(){
   const el=$('#view-sched'); const cur=currentEvent();
   const dayBlock=(label,events)=>{
     const items=events.map(ev=>{
-      const isDone=resultDone(ev.n), isCur=cur && cur.n===ev.n;
+      const isDone=resultDone(ev.n), isCur=S.setupDone && cur && cur.n===ev.n;
       let stat = isDone?'<span class="stat s-done">DONE</span>': isCur?'<span class="stat s-live">LIVE</span>':'<span class="stat s-up">UPCOMING</span>';
       let winLine='';
       if(isDone){ const r=S.results[ev.n];
@@ -694,7 +694,7 @@ function openResult(n){
   const sheet=$('#sheet');
   let resultUI='';
   if(ev.mode==='dodgeball'){
-    const seed=standings(13);
+    const seed=standings(ev.n);
     resultUI=`<div class="seed-hint">Suggested seeding by current standings:<br><b>${esc(seed[0].t.name)} + ${esc(seed[3].t.name)}</b> &nbsp;vs&nbsp; <b>${esc(seed[1].t.name)} + ${esc(seed[2].t.name)}</b><br><span style="font-size:11px;">Tap the 2 teams on the <b style="color:var(--t3)">winning</b> alliance.</span></div><div id="dodgeRows"></div>`;
   } else if(ev.mode==='bracket'){
     resultUI=`<div class="sec-lbl">🏆 Bracket — tap winners<span style="flex:1;height:1px;background:var(--line-soft)"></span></div><div id="bracketBox"></div>`;
@@ -737,7 +737,7 @@ function rebuildSheet(){
   const ev=EVENTS.find(e=>e.n===draft.n);
   const sheet=$('#sheet');
   let resultUI='';
-  if(ev.mode==='dodgeball'){ const seed=standings(13);
+  if(ev.mode==='dodgeball'){ const seed=standings(ev.n);
     resultUI=`<div class="seed-hint">Suggested seeding by current standings:<br><b>${esc(seed[0].t.name)} + ${esc(seed[3].t.name)}</b> &nbsp;vs&nbsp; <b>${esc(seed[1].t.name)} + ${esc(seed[2].t.name)}</b><br><span style="font-size:11px;">Tap the 2 teams on the <b style="color:var(--t3)">winning</b> alliance.</span></div><div id="dodgeRows"></div>`;
   } else if(ev.mode==='bracket'){ resultUI=`<div class="sec-lbl">🏆 Bracket — tap winners<span style="flex:1;height:1px;background:var(--line-soft)"></span></div><div id="bracketBox"></div>`;
   } else { resultUI=`<div class="sec-lbl">🏁 Finishing order — tap each team's place<span style="flex:1;height:1px;background:var(--line-soft)"></span></div><div id="rankRows"></div>`; }

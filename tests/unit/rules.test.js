@@ -19,11 +19,15 @@ test('dodgeball alliance points are 8 / 2', () => {
   assert.strictEqual(KO.DODGE_LOSE, 2);
 });
 
-test('event 13 is dodgeball, event 14 is the double finale', () => {
-  assert.strictEqual(KO.EVENTS.find(e => e.n === 13).mode, 'dodgeball');
-  assert.strictEqual(KO.isFinale(KO.EVENTS.find(e => e.n === 14)), true);
-  assert.strictEqual(KO.isFinale(KO.EVENTS.find(e => e.n === 13)), false);
-  assert.deepStrictEqual(KO.ptsArr(KO.EVENTS.find(e => e.n === 14)), [20, 12, 6, 2]);
+test('exactly one dodgeball event; the finale (event 14) is Lip Sync and pays double', () => {
+  const dodge = KO.EVENTS.filter(e => e.mode === 'dodgeball');
+  assert.strictEqual(dodge.length, 1);
+  assert.strictEqual(dodge[0].name, 'Dodgeball');
+  const finale = KO.EVENTS.find(e => e.n === 14);
+  assert.strictEqual(finale.name, 'Lip Sync Battle');     // the title is decided last
+  assert.strictEqual(KO.isFinale(finale), true);
+  assert.strictEqual(KO.isFinale(dodge[0]), false);
+  assert.deepStrictEqual(KO.ptsArr(finale), [20, 12, 6, 2]);
   assert.deepStrictEqual(KO.ptsArr(KO.EVENTS.find(e => e.n === 1)), [10, 6, 3, 1]);
 });
 

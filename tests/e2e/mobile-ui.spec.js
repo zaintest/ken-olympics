@@ -33,10 +33,9 @@ test('inputs are ≥16px so iOS Safari does not auto-zoom on focus', async ({ pa
 });
 
 test('long names wrap cleanly — no clipping, no horizontal scroll', async ({ page }) => {
-  const s = draftedState();
+  const s = finishedState();
   s.teams[0].name = 'The Absolutely Unstoppable Mega Hammerhead Sharks of San Diego';
   s.teams[0].players[0].name = 'Maximilian-Bartholomew Featherstonehaugh III';
-  for (let n = 1; n <= 14; n++) s.results[n] = n === 13 ? { win: ['t0', 't1'] } : { rank: ['t0', 't1', 't2', 't3'] };
   await seedState(page, s);
   await page.goto(editorPath);
 
