@@ -520,7 +520,9 @@ function render(){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   $('#view-'+activeTab).classList.add('active');
   $('#progBar').style.width = (doneCount()/EVENTS.length*100)+'%';
-  renderNow(); renderSched(); renderScores(); if(!VIEW_ONLY) renderDraft();
+  // Defensive: a glitch in one tab's render must never blank the whole app on game night.
+  const safe=(fn,name)=>{ try{ fn(); }catch(e){ console.error('render '+name+' failed',e); const el=$('#view-'+name); if(el && !el.innerHTML.trim()) el.innerHTML='<div class="empty" style="padding-top:40px;"><div class="big">Hmm, that didn’t load</div>Try the other tabs, or reload the page.<br><br><button class="btn primary" style="max-width:220px;margin:16px auto 0;" onclick="location.reload()">Reload</button></div>'; } };
+  safe(renderNow,'now'); safe(renderSched,'sched'); safe(renderScores,'scores'); if(!VIEW_ONLY) safe(renderDraft,'draft');
 }
 function renderConnErr(){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
