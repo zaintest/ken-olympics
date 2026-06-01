@@ -9,6 +9,16 @@ const ids = s => KO.standings(s).map(r => r.t.id);
 const DODGE = KO.EVENTS.find(e => e.mode === 'dodgeball').n;
 const ALLTEAM = KO.EVENTS.find(e => e.count === 'all' && e.mode === 'placement').n;
 
+test('tolerates a room with NO results object (Firebase drops an empty {})', () => {
+  const s = KO.defaultState();
+  delete s.results;                          // exactly what comes back from a freshly-seeded room
+  assert.doesNotThrow(() => KO.standings(s));
+  assert.doesNotThrow(() => KO.totals(s));
+  assert.doesNotThrow(() => KO.pointsForEvent(s, 1));
+  assert.doesNotThrow(() => KO.firstsCount(s, 't0'));
+  assert.deepStrictEqual(KO.standings(s).map(r => r.pts), [0, 0, 0, 0]);
+});
+
 test('placement event pays 10 / 6 / 3 / 1', () => {
   const s = freshTeams();
   s.results[2] = { rank: ['t0', 't1', 't2', 't3'] };

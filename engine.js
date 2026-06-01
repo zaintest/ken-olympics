@@ -88,7 +88,7 @@
   /* ---------------- SCORING ENGINE ---------------- */
   function pointsForEvent(S, n) {
     const ev = EVENTS.find(e => e.n === n);
-    const r = S.results[n];
+    const r = (S.results || {})[n];
     const out = {};
     S.teams.forEach(t => { out[t.id] = 0; });
     if (!r || !ev) return out;
@@ -114,7 +114,8 @@
 
   function firstsCount(S, id) {
     let c = 0;
-    EVENTS.forEach(e => { const r = S.results[e.n]; if (r && r.rank && r.rank[0] === id) c++; });
+    const R = S.results || {};
+    EVENTS.forEach(e => { const r = R[e.n]; if (r && r.rank && r.rank[0] === id) c++; });
     return c;
   }
 
@@ -129,8 +130,9 @@
   // How many events this player is recorded in (whole-team events count for everyone).
   function playerGames(S, ti, pi) {
     let c = 0;
+    const R = S.results || {};
     EVENTS.forEach(ev => {
-      const r = S.results[ev.n];
+      const r = R[ev.n];
       if (!r) return;
       if (ev.count === 'all') { c++; return; }
       if (r.lineup && r.lineup['t' + ti] && r.lineup['t' + ti].includes(pi)) c++;

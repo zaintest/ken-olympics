@@ -1,4 +1,4 @@
-const { test, expect, editorPath, viewerPath, seedState, draftedState, finishedState } = require('./helpers');
+const { test, expect, KO, editorPath, viewerPath, seedState, draftedState, finishedState } = require('./helpers');
 
 const AFTER_REVEAL = new Date('2026-06-05T06:00:00Z');
 
@@ -68,6 +68,17 @@ test('safe-area insets are wired into the sticky chrome', async ({ page }) => {
     return false;
   });
   expect(headerUsesInset, '.head-in honours safe-area-inset-top').toBe(true);
+});
+
+test('editor opens a fresh room (Firebase dropped empty results) without going blank', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  const s = KO.defaultState();
+  delete s.results;                          // Firebase persists no key for an empty {}
+  await seedState(page, s);
+  await page.goto(editorPath);
+  await expect(page.getByRole('button', { name: /open the draft/i })).toBeVisible(); // not blank
+  expect(errors, 'no uncaught errors on a fresh room').toEqual([]);
 });
 
 test('empty state: viewer arriving before the commissioner sets up', async ({ page }) => {

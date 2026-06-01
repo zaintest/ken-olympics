@@ -498,6 +498,11 @@ function bracketTreeHTML(ev, br){
 
 /* ============ RENDER ============ */
 function render(){
+  // Firebase doesn't persist empty objects, so a brand-new room comes back with no `results`
+  // (and could lose `teams`). Restore them so nothing downstream reads from undefined.
+  if(!S || typeof S!=='object') S=defaultState();
+  if(!S.results || typeof S.results!=='object') S.results={};
+  if(!Array.isArray(S.teams) || !S.teams.length) S.teams=defaultState().teams;
   setHeaderRole();
   if(isLocked()){
     renderLock();
